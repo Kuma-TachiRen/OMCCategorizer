@@ -1,4 +1,4 @@
-# OMCCategorization
+# [OMCCategorization](https://kuma-tachiren.github.io/OMCCategorization)
 [OnlineMathContest](https://onlinemathcontest.com/)，通称OMCの問題を分類するサイト
 
 ## 実装したい機能
