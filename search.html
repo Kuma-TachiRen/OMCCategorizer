@@ -5,6 +5,9 @@
   <title>OMCCategorization</title>
   <link rel="icon" href="/images/icon-32x32.png" sizes="32x32" type="image/png" />
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="js/search.js"></script>
 </head>
 
 <body>
@@ -27,33 +30,85 @@
     <details id="setting" open=true>
       <summary>Filter</summary>
       <form class="form-filter">
-        <div class="form-group">
-          <label>出題コンテスト名:</label>
-          <input type="text" id="f.ProbId" name="f.ProbId">
-        </div>
-        <div class="form-group">
-          <label>分野:</label>
-          <div class="chkbox"><input type="checkbox" id="f.FieldA" name="f.FieldA"><label for="f.FieldA">A(代数)</label>
-          </div>
-          <div class="chkbox"><input type="checkbox" id="f.FieldC" name="f.FieldC"><label for="f.FieldC">C(組合せ)</label>
-          </div>
-          <div class="chkbox"><input type="checkbox" id="f.FieldG" name="f.FieldG"><label for="f.FieldG">G(幾何)</label>
-          </div>
-          <div class="chkbox"><input type="checkbox" id="f.FieldN" name="f.FieldN"><label for="f.FieldN">N(整数論)</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>配点:</label>
-          <input type="number" id="f.PointMin" name="f.PointMin" min="100" max="1000" step="100" value="100">
-          <label>~</label>
-          <input type="number" id="f.PointMax" name="f.PointMax" min="100" max="1000" step="100" value="1000">
-        </div>
-        <div class="form-group">
-          <label>カテゴリ:</label>
-          <input type="text" id="f.Category" name="f.Category">
-        </div>
+        <table>
+          <tr class="form-group">
+            <th>問題名:</th>
+            <td><input type="text" id="f.ProbName" name="f.ProbName"></td>
+          </tr>
+          <tr class="form-group">
+            <th>分野:</th>
+            <td>
+              <div class="chkbox"><input type="checkbox" id="f.FieldA" name="f.FieldA"><label
+                  for="f.FieldA">A(代数)</label>
+              </div>
+              <div class="chkbox"><input type="checkbox" id="f.FieldC" name="f.FieldC"><label
+                  for="f.FieldC">C(組合せ)</label>
+              </div>
+              <div class="chkbox"><input type="checkbox" id="f.FieldG" name="f.FieldG"><label
+                  for="f.FieldG">G(幾何)</label>
+              </div>
+              <div class="chkbox"><input type="checkbox" id="f.FieldN" name="f.FieldN"><label
+                  for="f.FieldN">N(整数論)</label>
+              </div>
+              <div class="chkbox"><input type="checkbox" id="f.FieldExact" name="f.FieldExact"><label
+                  for="f.FieldExact">完全一致</label>
+              </div>
+            </td>
+          </tr>
+          <tr class="form-group">
+            <th>配点:</th>
+            <td>
+              <input type="number" id="f.PointMin" name="f.PointMin" min="100" max="1000" step="100" value="100">
+              <label> ~ </label>
+              <input type="number" id="f.PointMax" name="f.PointMax" min="100" max="1000" step="100" value="1000">
+            </td>
+          </tr>
+          <tr class="form-group">
+            <th>カテゴリ:</th>
+            <td>
+              <input type="text" id="f.Category" name="f.Category">
+            </td>
+          </tr>
+          <tr class="form-group">
+            <th>キーワード:</th>
+            <td>
+              <input type="text" id="f.Keywords" name="f.Keywords">
+            </td>
+          </tr>
+        </table>
+        <input type="submit" id="f.Filter" name="f.Filter" value="フィルタ">
+        <input type="reset">
       </form>
     </details>
+    <div id="problem-list">
+      <table class="problem-list">
+        <thead>
+          <tr>
+            <th class="sort" data-sort="pl-name" width="80px">問題名</th>
+            <th class="sort" data-sort="pl-point" width="50px">配点</th>
+            <th class="sort" data-sort="pl-field" width="50px">分野</th>
+            <th class="sort" data-sort="pl-category" width="160px">カテゴリ</th>
+            <th class="sort" data-sort="pl-keyword">キーワード</th>
+          </tr>
+        </thead>
+        <tbody id="problem-data" class="list">
+          <tr>
+            <td class="pl-name">OMC001(A)</td>
+            <td class="pl-point">100</td>
+            <td class="pl-field">A</td>
+            <td class="pl-category">方程式</td>
+            <td class="pl-keyword">因数定理</td>
+          </tr>
+          <tr>
+            <td class="pl-name">OMC001(B)</td>
+            <td class="pl-point">200</td>
+            <td class="pl-field">N</td>
+            <td class="pl-category">和</td>
+            <td class="pl-keyword">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </body>
 

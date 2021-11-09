@@ -1,13 +1,9 @@
 # [OMCCategorization](https://kuma-tachiren.github.io/OMCCategorization)
-[OnlineMathContest](https://onlinemathcontest.com/)，通称OMCの問題を分類するサイト
+[OnlineMathContest](https://onlinemathcontest.com/)，通称OMCの問題を分類するサイト．
 
-## 実装したい機能
-### 本サイト内
-- 問題番号から分類検索
-- 分類から問題検索
-- Keywordから問題検索
-### その他
-- OMC→本サイトへの拡張機能の作成
+## Category, Keywordについて
+Categoryはある程度広範に．
+Keywordは定理名など．
 
 ## 分類案
 - Algebra
@@ -19,12 +15,13 @@
   - 確率・期待値
   - ゲーム
 - Geometry
-  - 五心
+  - 三角形の五心
+  - 多角形
   - 円
-  - 発想ゲー
+  - 空間幾何
 - Number theory
   - 数列
   - 剰余
   - 位数
-
-具体的な手法等はKeywordとして分類？
+- Other Category
+  - Ad-Hoc

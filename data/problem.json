@@ -1,0 +1,6 @@
+[
+  {"name":"OMC001(A)","link":"omc001/tasks/20","point":100,"field":1,"category":["方程式"],"keyword":["因数定理"]},
+  {"name":"OMC001(B)","link":"omc001/tasks/21","point":200,"field":8,"category":["総和/総積"],"keyword":["各桁の数字"]},
+  {"name":"OMC001(C)","link":"omc001/tasks/22","point":300,"field":1,"category":["方程式"],"keyword":["平方根"]},
+  {"name":"OMC001(D)","link":"omc001/tasks/23","point":400,"field":2,"category":["数え上げ"],"keyword":["積の総和"]}
+]
