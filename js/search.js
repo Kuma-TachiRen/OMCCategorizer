@@ -24,7 +24,7 @@ window.onload = function () {
     }
 
     $.getJSON("./data/problem.json", function () { })
-      .done(function (json) {
+      .done(function (data) {
         for (var i in data) {
           var field = [];
           if (data[i].field & 1) field.push('A');
@@ -40,7 +40,7 @@ window.onload = function () {
           );
         }
       })
-      .fail(function (json) {
+      .fail(function () {
         alert("Failed: Couldn't get the data");
       });
   });
