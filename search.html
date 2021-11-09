@@ -1,0 +1,60 @@
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>OMCCategorization</title>
+  <link rel="icon" href="/images/icon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="wrapper">
+      <p class="logo"><a href="index.html">OMCCategorization</a></p>
+      <nav>
+        <ul class="nav-items">
+          <li class="nav-item"><a href="index.html">Top</a></li>
+          <li class="nav-item"><a href="category.html">Category</a></li>
+          <li class="nav-item"><a href="search.html">Search</a></li>
+          <li class="nav-v-line"></li>
+          <li class="nav-item"><a href="https://onlinemathcontest.com">OMC</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="body-contents">
+    <h1>Search</h1>
+    <details id="setting" open=true>
+      <summary>Filter</summary>
+      <form class="form-filter">
+        <div class="form-group">
+          <label>出題コンテスト名:</label>
+          <input type="text" id="f.ProbId" name="f.ProbId">
+        </div>
+        <div class="form-group">
+          <label>分野:</label>
+          <div class="chkbox"><input type="checkbox" id="f.FieldA" name="f.FieldA"><label for="f.FieldA">A(代数)</label>
+          </div>
+          <div class="chkbox"><input type="checkbox" id="f.FieldC" name="f.FieldC"><label for="f.FieldC">C(組合せ)</label>
+          </div>
+          <div class="chkbox"><input type="checkbox" id="f.FieldG" name="f.FieldG"><label for="f.FieldG">G(幾何)</label>
+          </div>
+          <div class="chkbox"><input type="checkbox" id="f.FieldN" name="f.FieldN"><label for="f.FieldN">N(整数論)</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>配点:</label>
+          <input type="number" id="f.PointMin" name="f.PointMin" min="100" max="1000" step="100" value="100">
+          <label>~</label>
+          <input type="number" id="f.PointMax" name="f.PointMax" min="100" max="1000" step="100" value="1000">
+        </div>
+        <div class="form-group">
+          <label>カテゴリ:</label>
+          <input type="text" id="f.Category" name="f.Category">
+        </div>
+      </form>
+    </details>
+  </div>
+</body>
+
+</html>

@@ -21,24 +21,31 @@ header {
   color: #ffffff;
   text-decoration: none;
 }
-.nav_items {
+.logo a:hover {
+  margin: 0 15px;
+  font-weight: bold;
+  font-size: 20px;
+  color: #ffffff;
+  text-decoration: none;
+}
+.nav-items {
   list-style: none;
   display: flex;
 }
-.nav_item a {
+.nav-item a {
   padding: 0 15px;
   color: #ffffff;
   text-decoration: none;
 }
-.nav_item a:hover {
+.nav-item a:hover {
   text-decoration: underline;
 }
-.nav_v_line {
+.nav-v-line {
   border-left: 1px solid #ffffff;
   margin: 0 10px;
 }
 
-.body_contents {
+.body-contents {
   width: 90%;
   margin: 0 auto;
 }
@@ -65,5 +72,97 @@ p a:hover {
   text-decoration: underline;
 }
 
+details {
+  border: 2px solid #bbbbbb;
+  border-radius: 5px;
+}
+summary{
+  padding: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #dddddd;
+  user-select: none;
+}
 
+.form-filter {
+  padding: 5px;
+}
+
+.form-group {
+  padding: 5px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.form-group label {
+  font-size: small;
+  padding: 0 5px;
+  font-weight: bold;
+}
+.form-group input[type=text] {
+  height: 26px;
+}
+.form-group input[type=number] {
+  height: 26px;
+}
+
+.chkbox {
+  margin: 3px;
+}
+.chkbox input[type=checkbox] {
+	display: none;
+}
+.chkbox label {
+  user-select: none;
+  padding: 0;
+  font-weight: normal;
+	font-size: 14px;
+	line-height: 14px;
+	display: inline-block;
+	cursor:	pointer;
+	position:	relative;
+}
+.chkbox label:before {
+  content: '';
+	width: 14px;
+	height:	14px;
+	display: inline-block;
+	background-color:	#ffffff;
+  border: 1px solid #000000;
+	border-radius: 3px;
+  margin: 0 3px;
+}
+.chkbox label::after {
+  border-right: 3px solid #444444;
+  border-bottom: 3px solid #444444;
+  content: '';
+  display: block;
+  height: 9px;
+  left: 7px;
+  width: 5px;
+  margin-top: -8px;
+  position: absolute;
+  top: 50%;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+.chkbox input[type=checkbox]:checked + label::after {
+  opacity: 1;
+}
+
+.def-list dt {
+  border-left: 5px solid #888888;
+  padding: 0 10px;
+  font-size: 24px;
+  font-weight: bold;
+}
+.def-list dt a {
+  color: #000000;
+  text-decoration: none;
+}
+.def-list dt a:hover {
+  text-decoration: underline;
+}
+.def-list dd {
+  margin: 10px;
 }
