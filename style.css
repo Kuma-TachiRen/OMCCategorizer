@@ -70,11 +70,22 @@ p a:hover {
   text-decoration: underline;
 }
 
+.def-list {
+  display: flex;
+  flex-wrap: wrap;
+}
 .def-list dt {
-  border-left: 5px solid gray;
   padding: 0 10px;
   font-size: 24px;
   font-weight: bold;
+  width: 30%;
+}
+.def-list dt::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  padding: 0 5px;
+  border-left: 3px solid gray;
 }
 .def-list dt a {
   color: black;
@@ -85,6 +96,8 @@ p a:hover {
 }
 .def-list dd {
   margin: 10px;
+  vertical-align: top;
+  width: 60%;
 }
 
 details {

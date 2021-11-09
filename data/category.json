@@ -1,5 +1,15 @@
 [
-  {"id": "equation","display": "Equation","description": "方程式"},
-  {"id": "game","display": "Game","description": "ゲーム"},
-  {"id": "construction","display": "Construction","description": "構築"}
+  {"id": "equation","display": "方程式","description": "因数定理，解と係数の関係など"},
+  {"id": "min_max","display": "最小値/最大値","description": "関数の最小値/最大値"},
+  {"id": "calculus","display": "微積分","description": "定積分など"},
+  {"id": "count_up","display": "数え上げ","description": "組み合わせの数など"},
+  {"id": "probability","display": "確率","description": "確率，期待値など"},
+  {"id": "game","display": "ゲーム","description": "ゲームのスコアや勝敗など"},
+  {"id": "polygon","display": "多角形","description": "三角形を含む多角形"},
+  {"id": "circle","display": "円","description": "円が出てくる問題"},
+  {"id": "solid_geom","display": "空間幾何","description": "空間幾何の問題"},
+  {"id": "num_seq","display": "数列","description": "数列"},
+  {"id": "modulo","display": "剰余","description": "剰余を考える問題"},
+  {"id": "order","display": "位数","description": "位数を考える問題"},
+  {"id": "adhoc","display": "Ad hoc","description": "固有の解法を持つ問題"}
 ]
