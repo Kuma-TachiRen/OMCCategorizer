@@ -102,17 +102,18 @@ summary{
 .form-filter {
   padding: 5px;
 }
-.form-filter input[type=submit] {
+.form-apply {
   font-weight: bold;
   color: white;
   background-color: dimgray;
   height: 40px;
   border-radius: 4px;
 }
-.form-filter input[type=reset] {
+.form-reset {
+  color: black;
+  background-color: whitesmoke;
   height: 40px;
   border-radius: 4px;
-  text-decoration: none;
 }
 
 .form-group {

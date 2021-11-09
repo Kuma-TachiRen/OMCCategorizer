@@ -8,6 +8,6 @@ $(document).ready(function () {
       }
     })
     .fail(function () {
-      alert("Failed: Couldn't get the data");
+      alert("Couldn't get the data");
     });
 });

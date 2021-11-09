@@ -33,62 +33,62 @@
         <table>
           <tr class="form-group">
             <th>問題名:</th>
-            <td><input type="text" id="f.ProbName" name="f.ProbName"></td>
+            <td><input type="text" id="f-name" name="f-name"></td>
           </tr>
           <tr class="form-group">
             <th>分野:</th>
             <td>
-              <div class="chkbox"><input type="checkbox" id="f.FieldA" name="f.FieldA"><label
-                  for="f.FieldA">A(代数)</label>
+              <div class="chkbox"><input type="checkbox" id="f-field-a" name="f-field-a"><label
+                  for="f-field-a">A(代数)</label>
               </div>
-              <div class="chkbox"><input type="checkbox" id="f.FieldC" name="f.FieldC"><label
-                  for="f.FieldC">C(組合せ)</label>
+              <div class="chkbox"><input type="checkbox" id="f-field-c" name="f-field-c"><label
+                  for="f-field-c">C(組合せ)</label>
               </div>
-              <div class="chkbox"><input type="checkbox" id="f.FieldG" name="f.FieldG"><label
-                  for="f.FieldG">G(幾何)</label>
+              <div class="chkbox"><input type="checkbox" id="f-field-g" name="f-field-g"><label
+                  for="f-field-g">G(幾何)</label>
               </div>
-              <div class="chkbox"><input type="checkbox" id="f.FieldN" name="f.FieldN"><label
-                  for="f.FieldN">N(整数論)</label>
+              <div class="chkbox"><input type="checkbox" id="f-field-n" name="f-field-n"><label
+                  for="f-field-n">N(整数論)</label>
               </div>
-              <div class="chkbox"><input type="checkbox" id="f.FieldExact" name="f.FieldExact"><label
-                  for="f.FieldExact">完全一致</label>
+              <div class="chkbox"><input type="checkbox" id="f-field-exact" name="f-field-exact"><label
+                  for="f-field-exact">完全一致</label>
               </div>
             </td>
           </tr>
           <tr class="form-group">
             <th>配点:</th>
             <td>
-              <input type="number" id="f.PointMin" name="f.PointMin" min="100" max="1000" step="100" value="100">
+              <input type="number" id="f-point-min" name="f-point-min" min="100" max="1000" step="100" value="100">
               <label> ~ </label>
-              <input type="number" id="f.PointMax" name="f.PointMax" min="100" max="1000" step="100" value="1000">
+              <input type="number" id="f-point-max" name="f-point-max" min="100" max="1000" step="100" value="1000">
             </td>
           </tr>
           <tr class="form-group">
             <th>カテゴリ:</th>
             <td>
-              <input type="text" id="f.Category" name="f.Category">
+              <input type="text" id="f-category" name="f-category">
             </td>
           </tr>
           <tr class="form-group">
             <th>キーワード:</th>
             <td>
-              <input type="text" id="f.Keywords" name="f.Keywords">
+              <input type="text" id="f-keywords" name="f-keywords">
             </td>
           </tr>
         </table>
-        <input type="submit" id="f.Filter" name="f.Filter" value="フィルタ">
-        <input type="reset">
+        <input type="button" class="form-apply" id="f-apply" name="f-apply" value="フィルタ">
+        <input type="button" class="form-reset" id="f-reset" name="f-reset" value="リセット">
       </form>
     </details>
     <div id="problem-list">
       <table class="problem-list">
         <thead>
           <tr>
-            <th class="sort" data-sort="pl-name" width="80px">問題名</th>
-            <th class="sort" data-sort="pl-point" width="50px">配点</th>
-            <th class="sort" data-sort="pl-field" width="50px">分野</th>
-            <th class="sort" data-sort="pl-category" width="160px">カテゴリ</th>
-            <th class="sort" data-sort="pl-keyword">キーワード</th>
+            <th class="sort" data-sort="pl_name" width="80px">問題名</th>
+            <th class="sort" data-sort="pl_point" width="50px">配点</th>
+            <th class="sort" data-sort="pl_field" width="50px">分野</th>
+            <th class="sort" data-sort="pl_category" width="160px">カテゴリ</th>
+            <th class="sort" data-sort="pl_keyword">キーワード</th>
           </tr>
         </thead>
         <tbody id="problem-data" class="list">
