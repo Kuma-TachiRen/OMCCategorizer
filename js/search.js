@@ -1,10 +1,4 @@
 window.onload = function () {
-  var plOptions = {
-    valueNames: ['pl-name', 'pl-point', 'pl-field', 'pl-category', 'pl-keyword']
-  };
-  var probList = new List('problem-list', plOptions);
-  probList.sort('pl-name', { order: 'asc' });
-
   $(document).ready(function () {
     var name = getParam('name');
     if (name) {
@@ -39,19 +33,26 @@ window.onload = function () {
             + '<td class="pl-keyword">' + data[i].keyword.Join('/') + '</td>'
           );
         }
+
+        var plOptions = {
+          valueNames: ['pl-name', 'pl-point', 'pl-field', 'pl-category', 'pl-keyword']
+        };
+        var probList = new List('problem-list', plOptions);
+        probList.sort('pl-name', { order: 'asc' });
       })
       .fail(function () {
         alert("Failed: Couldn't get the data");
       });
   });
 
-  function getParam(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-  }
+}
+
+function getParam(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
