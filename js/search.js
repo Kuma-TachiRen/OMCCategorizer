@@ -26,11 +26,13 @@ window.onload = function () {
           if (data[i].field & 4) field.push('G');
           if (data[i].field & 8) field.push('N');
           $('#problem-data').append(
-            '<td class="pl-name"><a href="https://onlinemathcontest.com/contests/' + data[i].link + '">' + data[i].name + '</td>'
+            '<tr>'
+            + '<td class="pl-name"><a href="https://onlinemathcontest.com/contests/' + data[i].link + '">' + data[i].name + '</td>'
             + '<td class="pl-point">' + data[i].point + '</td>'
             + '<td class="pl-field">' + field.join('/') + '</td>'
             + '<td class="pl-category">' + data[i].category.join('/') + '</td>'
             + '<td class="pl-keyword">' + data[i].keyword.join('/') + '</td>'
+            + '</tr>'
           );
         }
 
