@@ -1,0 +1,5 @@
+[
+  {"id": "equation","display": "Equation","description": "方程式"},
+  {"id": "game","display": "Game","description": "ゲーム"},
+  {"id": "construction","display": "Construction","description": "構築"}
+]
