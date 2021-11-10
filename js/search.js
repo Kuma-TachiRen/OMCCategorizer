@@ -54,9 +54,9 @@ window.onload = function () {
     } else {
       keyword = "";
     }
-
     $.getJSON("./data/problem.json", function () { })
       .done(function (data) {
+        var added = false;
         for (var i in data) {
           if (filter(data[i])) {
             $('#problem-data').append(
@@ -68,16 +68,17 @@ window.onload = function () {
               + '<td class="pl_keyword">' + data[i].keyword.join('/') + '</td>'
               + '</tr>'
             );
+            added = true;
           }
+        }
+        if (added) {
+          probList = new List('problem-list', plOptions);
+          probList.sort('pl_name', { order: 'asc' });
         }
       })
       .fail(function () {
         alert("Couldn't get the data");
       });
-    if ($('#problem-data').length>1) {
-      probList = new List('problem-list', plOptions);
-      probList.sort('pl_name', { order: 'asc' });
-    }
     $('#f-apply').on('click', filterApply);
     $('#f-reset').on('click', function () {
       window.location.href = 'search.html';
