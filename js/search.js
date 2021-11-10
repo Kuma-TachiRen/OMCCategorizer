@@ -1,5 +1,11 @@
 var plOptions = {
-  valueNames: ['pl_name', 'pl_point', 'pl_field', 'pl_category', 'pl_keyword']
+  valueNames: ['pl_name', 'pl_point', 'pl_field', 'pl_category', 'pl_keyword'],
+  page: 100,
+  pagination: {
+    paginationClass: 'pagination',
+    innerWindow: 3,
+    outerWindow: 1,
+  }
 };
 var probList;
 var probname;
@@ -10,8 +16,11 @@ var point_max;
 var category;
 var keyword;
 
+var categorydic = {};
+
 window.onload = function () {
   $(document).ready(function () {
+
     probname = getParam('name');
     if (probname) {
       $('#f-name').val(probname);
@@ -43,45 +52,62 @@ window.onload = function () {
       point_max = 1000;
     }
     category = getParam('category');
-    if (category) {
-      $('#f-category').val(category);
-    } else {
-      category = "";
-    }
     keyword = getParam('keyword');
     if (keyword) {
       $('#f-keyword').val(keyword);
     } else {
-      keyword = "";
+      keyword = '';
     }
-    $.getJSON("./data/problem.json", function () { })
+
+    $.getJSON("./data/category.json", function () { })
       .done(function (data) {
-        var added = false;
         for (var i in data) {
-          if (filter(data[i])) {
-            $('#problem-data').append(
-              '<tr>'
-              + '<td class="pl_name"><a href="https://onlinemathcontest.com/contests/' + data[i].link + '">' + data[i].name + '</td>'
-              + '<td class="pl_point">' + data[i].point + '</td>'
-              + '<td class="pl_field">' + numToField(data[i].field) + '</td>'
-              + '<td class="pl_category">' + data[i].category.join('/') + '</td>'
-              + '<td class="pl_keyword">' + data[i].keyword.join('/') + '</td>'
-              + '</tr>'
-            );
-            added = true;
+          categorydic[data[i].id] = '<a href=search?category=' + data[i].id + '>' + data[i].display + '</a>';
+          $('#f-category').append('<option value="' + data[i].id + '">' + data[i].display + '</option>');
+          if (data[i].id == category) {
+            $('#f-category').val(data[i].id);
           }
         }
-        if (added) {
-          probList = new List('problem-list', plOptions);
-          probList.sort('pl_name', { order: 'asc' });
-        }
+
+        $.getJSON("./data/problem.json", function () { })
+          .done(function (data) {
+            var count = 0;
+            for (var i in data) {
+              if (filter(data[i])) {
+                var categories = [];
+                for (var j in data[i].category) {
+                  categories.push(categorydic[data[i].category[j]]);
+                }
+                $('#problem-data').append(
+                  '<tr>'
+                  + '<td class="pl_name"><p hidden>' + data[i].name + '</p><a href="https://onlinemathcontest.com/contests/' + data[i].contestid + '/tasks/' + data[i].problemid + '">' + data[i].name + '</a></td>'
+                  + '<td class="pl_point"><a href="search?point_min='+data[i].point+'&point_max='+data[i].point+'">' + data[i].point + '</a></td>'
+                  + '<td class="pl_field">' + numToField(data[i].field) + '</td>'
+                  + '<td class="pl_category">' + categories.join('/') + '</td>'
+                  + '<td class="pl_keyword">' + data[i].keyword.join('/') + '</td>'
+                  + '</tr>'
+                );
+                count++;
+              }
+            }
+            $('#search-result').text('検索結果：'+count+'件');
+            if (count) {
+              $('#problem-list').append('<ul class="pagination"></ul>');
+              probList = new List('problem-list', plOptions);
+              probList.sort('pl_name', { order: 'asc' });
+            }
+          })
+          .fail(function () {
+            alert("Couldn't get the data of problems");
+          });
       })
       .fail(function () {
-        alert("Couldn't get the data");
+        alert("Couldn't get the data of categories");
       });
+
     $('#f-apply').on('click', filterApply);
     $('#f-reset').on('click', function () {
-      window.location.href = 'search.html';
+      window.location.href = 'search';
     });
   });
 }
@@ -90,12 +116,13 @@ function filter(data) {
   if (probname && (data.name.indexOf(probname) == -1)) return false;
   if (field) {
     if (fieldexact) {
-      if (data.field != num) return false;
+      if (data.field != field) return false;
     } else {
-      if ((data.field & num) == 0) return false;
+      if ((data.field & field) == 0) return false;
     }
   }
   if (point_min && point_max && ((data.point < point_min) || (data.point > point_max))) return false;
+  if (category && !data.category.includes(category)) return false;
   return true;
 }
 
@@ -114,8 +141,8 @@ function filterApply() {
   if ($('#f-point-max').val()) params.push('point_max=' + $('#f-point-max').val());
   if ($('#f-category').val()) params.push('category=' + $('#f-category').val());
   if ($('#f-keyword').val()) params.push('keyword=' + $('#f-keyword').val());
-  if (params.length == 0) window.location.href = 'search.html';
-  else window.location.href = 'search.html?' + params.join('&');
+  if (params.length == 0) window.location.href = 'search';
+  else window.location.href = 'search?' + params.join('&');
 }
 
 
@@ -131,9 +158,9 @@ function getParam(name, url) {
 
 function numToField(num) {
   var field = [];
-  if (num & 1) field.push('A');
-  if (num & 2) field.push('C');
-  if (num & 4) field.push('G');
-  if (num & 8) field.push('N');
+  if (num & 1) field.push('<a href="search?field=1">A</a>');
+  if (num & 2) field.push('<a href="search?field=2">C</a>');
+  if (num & 4) field.push('<a href="search?field=4">G</a>');
+  if (num & 8) field.push('<a href="search?field=8">N</a>');
   return field.join('/');
 }

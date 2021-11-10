@@ -13,12 +13,12 @@
 <body>
   <header>
     <div class="wrapper">
-      <p class="logo"><a href="index.html">OMCCategorization</a></p>
+      <p class="logo"><a href="index">OMCCategorization</a></p>
       <nav>
         <ul class="nav-items">
-          <li class="nav-item"><a href="index.html">Top</a></li>
-          <li class="nav-item"><a href="category.html">Category</a></li>
-          <li class="nav-item"><a href="search.html">Search</a></li>
+          <li class="nav-item"><a href="index">Top</a></li>
+          <li class="nav-item"><a href="category">Category</a></li>
+          <li class="nav-item"><a href="search">Search</a></li>
           <li class="nav-v-line"></li>
           <li class="nav-item"><a href="https://onlinemathcontest.com">OMC</a></li>
         </ul>
@@ -28,7 +28,7 @@
   <div class="body-contents">
     <h1>Search</h1>
     <details id="setting" open=true>
-      <summary>Filter</summary>
+      <summary>フィルタ</summary>
       <form class="form-filter">
         <table>
           <tr class="form-group">
@@ -66,7 +66,9 @@
           <tr class="form-group">
             <th>カテゴリ:</th>
             <td>
-              <input type="text" id="f-category" name="f-category">
+              <select id="f-category" name="f-category">
+                <option value="">-</option>
+              </select>
             </td>
           </tr>
           <tr class="form-group">
@@ -81,10 +83,11 @@
       </form>
     </details>
     <div id="problem-list">
+      <p id="search-result">検索結果：</p>
       <table class="problem-list">
         <thead>
           <tr>
-            <th class="sort" data-sort="pl_name" width="80px">問題名</th>
+            <th class="sort" data-sort="pl_name" width="120px">問題名</th>
             <th class="sort" data-sort="pl_point" width="50px">配点</th>
             <th class="sort" data-sort="pl_field" width="50px">分野</th>
             <th class="sort" data-sort="pl_category" width="160px">カテゴリ</th>

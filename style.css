@@ -8,6 +8,7 @@ header {
   width: 100%;
   background-color: #111122;
 }
+
 .wrapper {
   overflow: hidden;
   margin: 0 auto;
@@ -15,6 +16,7 @@ header {
   align-items: center;
   justify-content: space-between;
 }
+
 .logo a {
   margin: 0 15px;
   font-weight: bold;
@@ -22,22 +24,27 @@ header {
   color: white;
   text-decoration: none;
 }
+
 .logo a:hover {
   color: white;
   text-decoration: none;
 }
+
 .nav-items {
   list-style: none;
   display: flex;
 }
+
 .nav-item a {
   padding: 0 15px;
   color: white;
   text-decoration: none;
 }
+
 .nav-item a:hover {
   text-decoration: underline;
 }
+
 .nav-v-line {
   border-left: 1px solid white;
   margin: 0 10px;
@@ -52,19 +59,23 @@ h1 {
   padding: 0 20px;
   border-bottom: 1px solid gray;
 }
+
 h2 a {
   padding: 0 10px;
   border-left: 5px solid gray;
   color: black;
   text-decoration: none;
 }
+
 h2 a:hover {
   text-decoration: underline;
 }
+
 p a {
   color: cornflowerblue;
   text-decoration: underline;
 }
+
 p a:hover {
   color: palevioletred;
   text-decoration: underline;
@@ -74,12 +85,14 @@ p a:hover {
   display: flex;
   flex-wrap: wrap;
 }
+
 .def-list dt {
   padding: 0 10px;
   font-size: 24px;
   font-weight: bold;
   width: 30%;
 }
+
 .def-list dt::before {
   content: '';
   width: 5px;
@@ -87,13 +100,16 @@ p a:hover {
   padding: 0 5px;
   border-left: 3px solid gray;
 }
+
 .def-list dt a {
   color: black;
   text-decoration: none;
 }
+
 .def-list dt a:hover {
   text-decoration: underline;
 }
+
 .def-list dd {
   margin: 10px;
   vertical-align: top;
@@ -104,7 +120,8 @@ details {
   border: 2px solid gray;
   border-radius: 5px;
 }
-summary{
+
+summary {
   padding: 5px;
   cursor: pointer;
   font-weight: bold;
@@ -114,69 +131,87 @@ summary{
 
 .form-filter {
   padding: 5px;
+  margin: 0;
 }
+
 .form-apply {
   font-weight: bold;
   color: white;
   background-color: dimgray;
   height: 40px;
   border-radius: 4px;
+  cursor: pointer;
 }
+
 .form-reset {
   color: black;
   background-color: whitesmoke;
   height: 40px;
   border-radius: 4px;
+  cursor: pointer;
 }
 
 .form-group {
   padding: 5px;
   text-align: left;
 }
+
 .form-group th {
   font-size: small;
   padding: 0 5px;
   min-width: 80px;
   font-weight: bold;
 }
+
 .form-group td {
   display: flex;
   justify-content: left;
   align-items: center;
 }
+
 .form-group input[type=text] {
   height: 26px;
 }
+
 .form-group input[type=number] {
   height: 26px;
+}
+
+.form-group select {
+  height: 26px;
+  min-width: 160px;
 }
 
 .chkbox {
   margin: 3px;
 }
+
 .chkbox input[type=checkbox] {
-	display: none;
+  display: none;
 }
+
 .chkbox label {
   user-select: none;
   font-weight: normal;
-	font-size: 14px;
-	line-height: 14px;
-	display: inline-block;
-	cursor:	pointer;
-	position:	relative;
+  font-size: 14px;
+  line-height: 14px;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
 }
+
 .chkbox label:before {
   content: '';
-	width: 14px;
-	height:	14px;
-	display: inline-block;
-	background-color:	white;
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  background-color: white;
   border: 1px solid black;
-	border-radius: 3px;
+  border-radius: 3px;
   margin: 0 4px 0 0;
-	vertical-align: middle;
+  vertical-align: middle;
 }
+
 .chkbox label::after {
   border-right: 3px solid dimgray;
   border-bottom: 3px solid dimgray;
@@ -191,7 +226,8 @@ summary{
   transform: rotate(45deg);
   opacity: 0;
 }
-.chkbox input[type=checkbox]:checked + label::after {
+
+.chkbox input[type=checkbox]:checked+label::after {
   opacity: 1;
 }
 
@@ -200,37 +236,82 @@ summary{
   min-width: 500px;
   border-collapse: collapse;
 }
+
 .problem-list th {
   padding: 10px 10px;
   font-weight: bold;
   background-color: whitesmoke;
-	vertical-align: middle;
+  vertical-align: middle;
 }
+
 .problem-list th:after {
-	vertical-align: middle;
+  vertical-align: middle;
   font-weight: normal;
   font-size: 6px;
 }
+
 .problem-list td {
   font-size: small;
   padding: 10px 10px;
   text-align: center;
   border-bottom: 1px solid whitesmoke;
 }
+
 .problem-list a {
   color: black;
   text-decoration: none;
 }
+
 .problem-list a:hover {
   text-decoration: underline;
 }
 
 .sort:after {
-  content:"■";
+  content: "■";
 }
+
 .sort.desc:after {
-  content:"▲";
+  content: "▼";
 }
+
 .sort.asc:after {
-  content:"▼";
+  content: "▲";
+}
+
+.pagination {
+  list-style: none;
+  position: relative;
+  left: 50%;
+  float: left;
+}
+
+.pagination li {
+  margin: 0 1px;
+  position: relative;
+  left: -50%;
+  float: left;
+}
+
+.pagination li span, .pagination li a {
+  display: block;
+  font-size: 14px;
+  padding: 0.6em 1em;
+  border-radius: 5px;
+  border: 2px solid gray;
+}
+
+.pagination li a {
+  background: white;
+  color: black;
+  text-decoration: none;
+}
+
+.pagination li a:hover {
+  background: lightgrey;
+}
+
+.pagination li.active a {
+  background: darkgrey;
+  color: white;
+  font-weight: bold;
 }
