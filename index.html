@@ -1,39 +1,50 @@
 <html lang="ja">
+
 <head>
   <meta charset="utf-8">
   <title>OMCCategorizer</title>
   <link rel="icon" href="./image/icon-32x32.png" sizes="32x32" type="image/png" />
   <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="js/loader.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
 </head>
+
 <body>
-  <header>
-    <div class="wrapper">
-      <p class="logo"><a href="index">OMCCategorizer</a></p>
-      <nav>
-        <ul class="nav-items">
-          <li class="nav-item"><a href="index">Top</a></li>
-          <li class="nav-item"><a href="category">Category</a></li>
-          <li class="nav-item"><a href="search">Search</a></li>
-          <li class="nav-v-line"></li>
-          <li class="nav-item"><a href="https://onlinemathcontest.com">OMC</a></li>
-        </ul>
-      </nav>
+  <div id="loader" class="loader">
+    <div class="loading-mark"></div>
+  </div>
+  <div id="contents" class="contents" loading=true>
+    <header>
+      <div class="wrapper">
+        <p class="logo"><a href="index">OMCCategorizer</a></p>
+        <nav>
+          <ul class="nav-items">
+            <li class="nav-item"><a href="index">Top</a></li>
+            <li class="nav-item"><a href="category">Category</a></li>
+            <li class="nav-item"><a href="search">Search</a></li>
+            <li class="nav-v-line"></li>
+            <li class="nav-item"><a href="https://onlinemathcontest.com">OMC</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <div class="body-contents">
+      <h1>OMC Categorizer</h1>
+      <p><a href="https://onlinemathcontest.com">OnlineMathContest</a>上の問題を分類するサイトです．誠意製作中</p>
+      <h1>Pages</h1>
+      <dl class="def-list">
+        <dt><a href="">Top</a></dt>
+        <dd>このページです．</dd>
+        <dt><a href="category">Category</a></dt>
+        <dd>カテゴリ一覧を表示します．</dd>
+        <dt><a href="search">Search</a></dt>
+        <dd>問題を絞り込んで検索ができます．</dd>
+      </dl>
+      <h1>Contact</h1>
+      <p>Twitter:<a href="https://twitter.com/Kuma_TachiRen">@Kuma_TachiRen</p>
     </div>
-  </header>
-  <div class="body-contents">
-    <h1>OMC Categorizer</h1>
-    <p><a href="https://onlinemathcontest.com">OnlineMathContest</a>上の問題を分類するサイトです．誠意製作中</p>
-    <h1>Pages</h1>
-    <dl class="def-list">
-      <dt><a href="">Top</a></dt>
-      <dd>このページです．</dd>
-      <dt><a href="category">Category</a></dt>
-      <dd>カテゴリ一覧を表示します．</dd>
-      <dt><a href="search">Search</a></dt>
-      <dd>問題を絞り込んで検索ができます．</dd>
-    </dl>
-    <h1>Contact</h1>
-    <p>Twitter:<a href="https://twitter.com/Kuma_TachiRen">@Kuma_TachiRen</p>
   </div>
 </body>
+
 </html>

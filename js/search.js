@@ -15,111 +15,112 @@ var categorydic = {};
 var local_storage = {};
 var storage_available;
 
-window.onload = function () {
-  $(document).ready(function () {
-    // get URL parameter
-    param.probname = getParam('name');
-    if (param.probname) {
-      $('#f-name').val(param.probname);
-    } else {
-      param.probname = "";
-    }
-    param.name_not = getParam('name_not') == 'true';
-    if (param.name_not) $("#f-name-not").prop('checked', true);
-    param.field = getParam('field');
-    if (param.field) {
-      var num = parseInt(param.field);
-      if ((num & 1) != 0) $('#f-field-a').prop('checked', true);
-      if ((num & 2) != 0) $('#f-field-c').prop('checked', true);
-      if ((num & 4) != 0) $('#f-field-g').prop('checked', true);
-      if ((num & 8) != 0) $('#f-field-n').prop('checked', true);
-    } else {
-      param.field = 0;
-    }
-    param.fieldexact = getParam('field_exact') == 'true';
-    if (param.fieldexact) $('#f-field-exact').prop('checked', true);
-    param.point_min = parseInt(getParam('point_min'));
-    if (param.point_min) {
-      $('#f-point-min').val(param.point_min);
-    } else {
-      param.point_min = 0;
-    }
-    param.point_max = parseInt(getParam('point_max'));
-    if (param.point_max) {
-      $('#f-point-max').val(param.point_max);
-    } else {
-      param.point_max = 1000;
-    }
-    param.category = getParam('category');
-    param.keyword = getParam('keyword');
-    if (param.keyword) {
-      $('#f-keyword').val(param.keyword);
-    } else {
-      param.keyword = '';
-    }
-    param.ca = getParam('ca') == 'true';
-    if (param.ca) $('#f-ca').prop('checked', true);
-    param.ca_not = getParam('ca_not') == 'true';
-    if (param.ca_not) $('#f-ca-not').prop('checked', true);
-    param.official = getParam('official') == 'true';
-    if (param.official) $('#f-official').prop('checked', true);
-    param.voluntary = getParam('voluntary') == 'true';
-    if (param.voluntary) $('#f-voluntary').prop('checked', true);
+$(function () {
+  // get URL parameter
+  param.probname = getParam('name');
+  if (param.probname) {
+    $('#f-name').val(param.probname);
+  } else {
+    param.probname = "";
+  }
+  param.name_not = getParam('name_not') == 'true';
+  if (param.name_not) $("#f-name-not").prop('checked', true);
+  param.field = getParam('field');
+  if (param.field) {
+    var num = parseInt(param.field);
+    if ((num & 1) != 0) $('#f-field-a').prop('checked', true);
+    if ((num & 2) != 0) $('#f-field-c').prop('checked', true);
+    if ((num & 4) != 0) $('#f-field-g').prop('checked', true);
+    if ((num & 8) != 0) $('#f-field-n').prop('checked', true);
+  } else {
+    param.field = 0;
+  }
+  param.fieldexact = getParam('field_exact') == 'true';
+  if (param.fieldexact) $('#f-field-exact').prop('checked', true);
+  param.point_min = parseInt(getParam('point_min'));
+  if (Number.isInteger(param.point_min)) {
+    $('#f-point-min').val(param.point_min);
+  } else {
+    param.point_min = 0;
+  }
+  param.point_max = parseInt(getParam('point_max'));
+  if (Number.isInteger(param.point_max)) {
+    $('#f-point-max').val(param.point_max);
+  } else {
+    param.point_max = 1000;
+  }
+  param.category = getParam('category');
+  param.keyword = getParam('keyword');
+  if (param.keyword) {
+    $('#f-keyword').val(param.keyword);
+  } else {
+    param.keyword = '';
+  }
+  param.ca = getParam('ca') == 'true';
+  if (param.ca) $('#f-ca').prop('checked', true);
+  param.ca_not = getParam('ca_not') == 'true';
+  if (param.ca_not) $('#f-ca-not').prop('checked', true);
+  param.official = getParam('official') == 'true';
+  if (param.official) $('#f-official').prop('checked', true);
+  param.voluntary = getParam('voluntary') == 'true';
+  if (param.voluntary) $('#f-voluntary').prop('checked', true);
 
-    // get localStorage
-    storage_available = isLocalStorageAvailable();
-    if (storage_available) {
-      if (localStorage.getItem('OMCCategorization')) local_storage = JSON.parse(localStorage.getItem('OMCCategorization'));
-    }
-    if (!local_storage.CAstatus) local_storage.CAstatus = {};
-    if (!local_storage.CAshow) local_storage.CAshow = false;
-    else $('#f-ca-show').prop('checked', true);
-    saveStorage();
+  if (Object.keys(param).length > 0) $('#setting').attr('open', true);
 
-    // get category
-    $.getJSON("./data/category.json", function () { })
-      .done(function (data) {
-        for (var i in data) {
-          categorydic[data[i].id] = '<a href=search?category=' + data[i].id + '>' + data[i].display + '</a>';
-          $('#f-category').append('<option value="' + data[i].id + '">' + data[i].display + '</option>');
-          if (data[i].id == param.category) {
-            $('#f-category').val(data[i].id);
-          }
+  // get localStorage
+  storage_available = isLocalStorageAvailable();
+  if (storage_available) {
+    if (localStorage.getItem('OMCCategorization')) local_storage = JSON.parse(localStorage.getItem('OMCCategorization'));
+  }
+  if (!local_storage.CAstatus) local_storage.CAstatus = {};
+  if (!local_storage.CAshow) local_storage.CAshow = false;
+  else $('#f-ca-show').prop('checked', true);
+  saveStorage();
+
+  // get category
+  $.getJSON("./data/category.json", function () { })
+    .done(function (data) {
+      for (var i in data) {
+        categorydic[data[i].id] = '<a href=search?category=' + data[i].id + '>' + data[i].display + '</a>';
+        $('#f-category').append('<option value="' + data[i].id + '">' + data[i].display + '</option>');
+        if (data[i].id == param.category) {
+          $('#f-category').val(data[i].id);
         }
+      }
 
-        // get problem
-        $.getJSON("./data/problem.json", function () { })
-          .done(function (data) {
-            var count_match = 0;
-            var count_total = 0;
-            for (var i in data) {
-              count_total++;
-              if (filter(data[i])) {
-                $('#problem-data').append(problemColumn(data[i]));
-                count_match++;
-              }
+      // get problem
+      $.getJSON("./data/problem.json", function () { })
+        .done(function (data) {
+          var count_match = 0;
+          var count_total = 0;
+          for (var i in data) {
+            count_total++;
+            if (filter(data[i])) {
+              $('#problem-data').append(problemColumn(data[i]));
+              count_match++;
             }
-            $('#search-result').text('検索結果：' + count_match + '/' + count_total + '件');
-            if (count_match) {
-              $('#problem-list').append('<ul class="pagination"></ul>');
-              probList = new List('problem-list', plOptions);
-              probList.sort('pl_name', { order: 'asc' });
-            }
-          })
-          .fail(function () {
-            alert("Couldn't get the data of problems");
-          });
-      })
-      .fail(function () {
-        alert("Couldn't get the data of categories");
-      });
-
-    $('#f-apply').on('click', applyClick);
-    $('#f-reset').on('click', function () {
-      window.location.href = 'search';
+          }
+          $('#search-result').text('検索結果：' + count_match + '/' + count_total + '件');
+          if (count_match) {
+            $('#problem-list').append('<ul class="pagination"></ul>');
+            probList = new List('problem-list', plOptions);
+            probList.sort('pl_name', { order: 'asc' });
+          }
+        })
+        .fail(function () {
+          alert("Couldn't get the data of problems");
+        });
+    })
+    .fail(function () {
+      alert("Couldn't get the data of categories");
     });
+
+  $('#f-apply').on('click', applyClick);
+  $('#f-reset').on('click', function () {
+    window.location.href = 'search';
   });
-}
+  loaded();
+});
 
 function problemColumn(data) {
   var categories = [];
@@ -186,8 +187,10 @@ function applyClick() {
   if ($('#f-field-n').prop('checked')) num += 8;
   if (num) newparams.push('field=' + num);
   if ($('#f-field-exact').prop('checked')) newparams.push('field_exact=true');
-  if ($('#f-point-min').val()) newparams.push('point_min=' + $('#f-point-min').val());
-  if ($('#f-point-max').val()) newparams.push('point_max=' + $('#f-point-max').val());
+  if ($('#f-point-min').val() && $('#f-point-max').val() && !($('#f-point-min').val() == 0 && $('#f-point-max').val() == 1000)) {
+    newparams.push('point_min=' + $('#f-point-min').val());
+    newparams.push('point_max=' + $('#f-point-max').val());
+  }
   if ($('#f-category').val()) newparams.push('category=' + $('#f-category').val());
   if ($('#f-keyword').val()) newparams.push('keyword=' + $('#f-keyword').val());
   if ($('#f-ca').prop('checked')) newparams.push('ca=true');

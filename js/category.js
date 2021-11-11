@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
   $.getJSON("./data/category.json", function () { })
     .done(function (data) {
       for (var i in data) {
@@ -10,4 +10,5 @@ $(document).ready(function () {
     .fail(function () {
       alert("Couldn't get the data");
     });
+  loaded();
 });
