@@ -192,6 +192,8 @@ function applyClick() {
   if ($('#f-keyword').val()) newparams.push('keyword=' + $('#f-keyword').val());
   if ($('#f-ca').prop('checked')) newparams.push('ca=true');
   if ($('#f-ca-not').prop('checked')) newparams.push('ca_not=true');
+  if ($('#f-official').prop('checked')) newparams.push('official=true');
+  if ($('#f-voluntary').prop('checked')) newparams.push('voluntary=true');
   local_storage.CAshow = ($('#f-ca-show').prop('checked') == true);
   saveStorage();
   // page move
