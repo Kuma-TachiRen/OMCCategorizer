@@ -18,13 +18,16 @@ var storage_available;
 $(function () {
   // get URL parameter
   param.probname = getParam('name');
+  var param_changed = false;
+  function chkboxCheck(id) { $('#' + id).prop('checked', true); param_changed = true; }
   if (param.probname) {
     $('#f-name').val(param.probname);
+    param_changed = true;
   } else {
     param.probname = "";
   }
   param.name_not = getParam('name_not') == 'true';
-  if (param.name_not) $("#f-name-not").prop('checked', true);
+  if (param.name_not) chkboxCheck('f-name-not');
   param.field = getParam('field');
   if (param.field) {
     var num = parseInt(param.field);
@@ -32,11 +35,12 @@ $(function () {
     if ((num & 2) != 0) $('#f-field-c').prop('checked', true);
     if ((num & 4) != 0) $('#f-field-g').prop('checked', true);
     if ((num & 8) != 0) $('#f-field-n').prop('checked', true);
+    param_changed = true;
   } else {
     param.field = 0;
   }
   param.fieldexact = getParam('field_exact') == 'true';
-  if (param.fieldexact) $('#f-field-exact').prop('checked', true);
+  if (param.fieldexact) chkboxCheck('f-field-exact');
   param.point_min = parseInt(getParam('point_min'));
   if (Number.isInteger(param.point_min)) {
     $('#f-point-min').val(param.point_min);
@@ -49,23 +53,26 @@ $(function () {
   } else {
     param.point_max = 1000;
   }
+  if (!(param.point_min == 0 && param.point_max == 1000)) param_changed = true;
   param.category = getParam('category');
+  if (param.category) param_changed = true;
   param.keyword = getParam('keyword');
   if (param.keyword) {
     $('#f-keyword').val(param.keyword);
+    param_changed = true;
   } else {
     param.keyword = '';
   }
   param.ca = getParam('ca') == 'true';
-  if (param.ca) $('#f-ca').prop('checked', true);
+  if (param.ca) chkboxCheck('f-ca');
   param.ca_not = getParam('ca_not') == 'true';
-  if (param.ca_not) $('#f-ca-not').prop('checked', true);
+  if (param.ca_not) chkboxCheck('f-ca-not');
   param.official = getParam('official') == 'true';
-  if (param.official) $('#f-official').prop('checked', true);
+  if (param.official) chkboxCheck('f-official');
   param.voluntary = getParam('voluntary') == 'true';
-  if (param.voluntary) $('#f-voluntary').prop('checked', true);
+  if (param.voluntary) chkboxCheck('f-voluntary');
 
-  if (Object.keys(param).length > 0) $('#setting').attr('open', true);
+  if (param_changed) $('#setting').attr('open', true);
 
   // get localStorage
   storage_available = isLocalStorageAvailable();
@@ -131,7 +138,7 @@ function problemColumn(data) {
   var isVol = (data.voluntary ? 'voluntary=true ' : '');
   return '<tr class="problem-column"' + isCA + '>'
     + '<td class="pl_name"><p hidden>' + data.name + '</p>'
-    + (local_storage.CAshow ? '<span class="ca-circle" ' + isCA + 'id="ca-' + data.problemid + '" onclick="caClick(' + data.problemid + ')"></span>' : '')
+    + (local_storage.CAshow ? '<span class="ca-button" ' + isCA + 'id="ca-' + data.problemid + '" onclick="caClick(' + data.problemid + ')"></span>' : '')
     + '<a ' + isVol + 'href="https://onlinemathcontest.com/contests/' + data.contestid + '/tasks/' + data.problemid + '" target="_blank" rel="noopener noreferrer">' + data.name + '</a></td>'
     + '<td class="pl_point"><a href="search?point_min=' + data.point + '&point_max=' + data.point + '">' + data.point + '</a></td>'
     + '<td class="pl_field">' + numToField(data.field) + '</td>'

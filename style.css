@@ -189,7 +189,7 @@ p a:hover {
   width: 60%;
 }
 
-details {
+.setting {
   border: 2px solid gray;
   border-radius: 5px;
 }
@@ -364,39 +364,35 @@ summary {
   vertical-align: middle;
 }
 
-.problem-column {
-  transition: 0.3s;
-}
-
 .problem-column[ca=true] {
   background-color: #ddffdd;
 }
 
-.ca-circle {
+.ca-button {
+  cursor: pointer;
+  user-select: none;
+}
+
+.ca-button::before {
   display: inline-block;
   vertical-align: middle;
-  width: 14px;
-  height: 14px;
-  margin: 0 3px;
-  cursor: pointer;
-  transition: 0.3s;
-  border-radius: 50%;
-  border: 1px solid gray;
+  width: 20px;
+  content: '-';
+  color: white;
+  background-color: #888888;
+  font-size: 9px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 2px;
+  margin: 4px;
 }
 
-.ca-circle[ca=true]::after {
-  border-right: 3px solid dimgray;
-  border-bottom: 3px solid dimgray;
-  content: '';
-  display: block;
-  height: 9px;
-  width: 5px;
-  margin-left: 3px;
-  top: 50%;
-  transform: rotate(45deg);
+.ca-button[ca=true]::before {
+  content: 'CA';
+  background-color: #66dd66;
 }
 
-.problem-column a[voluntary=true]::before {
+.problem-column a[voluntary=true]::after {
   content: '有志';
   color: white;
   background-color: black;
