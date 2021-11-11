@@ -278,6 +278,54 @@ summary {
   content: "▲";
 }
 
+.pl-name {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.problem-column {
+  transition: 0.3s;
+}
+
+.problem-column[ca=true] {
+  background-color: #ddffdd;
+}
+
+.ca-circle {
+  display: inline-block;
+  vertical-align: middle;
+  width: 14px;
+  height: 14px;
+  margin: 0 3px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 50%;
+  border: 1px solid gray;
+}
+
+.ca-circle[ca=true]::after {
+  border-right: 3px solid dimgray;
+  border-bottom: 3px solid dimgray;
+  content: '';
+  display: block;
+  height: 9px;
+  width: 5px;
+  margin-left: 3px;
+  top: 50%;
+  transform: rotate(45deg);
+}
+
+.problem-column a[voluntary=true]::before {
+  content: '有志';
+  color: white;
+  background-color: black;
+  font-size: 8px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 2px;
+  margin: 2px;
+}
+
 .pagination {
   list-style: none;
   position: relative;
