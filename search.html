@@ -33,7 +33,12 @@
         <table>
           <tr class="form-group">
             <th>問題名:</th>
-            <td><input type="text" id="f-name" name="f-name"></td>
+            <td>
+              <input type="text" id="f-name" name="f-name">
+              <div class="chkbox"><input type="checkbox" id="f-name-not" name="f-name-not"><label
+                  for="f-name-not">NOT検索</label>
+              </div>
+            </td>
           </tr>
           <tr class="form-group">
             <th>分野:</th>
@@ -58,9 +63,9 @@
           <tr class="form-group">
             <th>配点:</th>
             <td>
-              <input type="number" id="f-point-min" name="f-point-min" min="100" max="1000" step="100" value="100">
+              <input type="number" id="f-point-min" name="f-point-min" min="0" max="1000" step="100" value="0">
               <label> ~ </label>
-              <input type="number" id="f-point-max" name="f-point-max" min="100" max="1000" step="100" value="1000">
+              <input type="number" id="f-point-max" name="f-point-max" min="0" max="1000" step="100" value="1000">
             </td>
           </tr>
           <tr class="form-group">
@@ -80,11 +85,9 @@
           <tr class="form-group">
             <th>CA関連:</th>
             <td>
-              <div class="chkbox"><input type="checkbox" id="f-ca" name="f-ca"><label
-                  for="f-ca">CA済</label>
+              <div class="chkbox"><input type="checkbox" id="f-ca" name="f-ca"><label for="f-ca">CA済</label>
               </div>
-              <div class="chkbox"><input type="checkbox" id="f-ca-not" name="f-ca-not"><label
-                  for="f-ca-not">未CA</label>
+              <div class="chkbox"><input type="checkbox" id="f-ca-not" name="f-ca-not"><label for="f-ca-not">未CA</label>
               </div>
               <div class="chkbox"><input type="checkbox" id="f-ca-show" name="f-ca-show"><label
                   for="f-ca-show">CA管理ボタン表示</label>

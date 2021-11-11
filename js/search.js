@@ -24,6 +24,8 @@ window.onload = function () {
     } else {
       param.probname = "";
     }
+    param.name_not = getParam('name_not') == 'true';
+    if (param.name_not) $("#f-name-not").prop('checked', true);
     param.field = getParam('field');
     if (param.field) {
       var num = parseInt(param.field);
@@ -35,12 +37,12 @@ window.onload = function () {
       param.field = 0;
     }
     param.fieldexact = getParam('field_exact') == 'true';
-    $('#f-field-exact').prop('checked', param.fieldexact);
+    if (param.fieldexact) $('#f-field-exact').prop('checked', true);
     param.point_min = parseInt(getParam('point_min'));
     if (param.point_min) {
       $('#f-point-min').val(param.point_min);
     } else {
-      param.point_min = 100;
+      param.point_min = 0;
     }
     param.point_max = parseInt(getParam('point_max'));
     if (param.point_max) {
@@ -69,7 +71,7 @@ window.onload = function () {
     if (!local_storage.CAshow) local_storage.CAshow = false;
     else $('#f-ca-show').prop('checked', true);
     saveStorage();
-    
+
     // get category
     $.getJSON("./data/category.json", function () { })
       .done(function (data) {
@@ -147,7 +149,11 @@ function caClick(id) {
 }
 
 function filter(data) {
-  if (param.probname && (data.name.indexOf(param.probname) == -1)) return false;
+  if (param.name_not) {
+    if (param.probname && (data.name.indexOf(param.probname) == -1)) return false;
+  } else {
+    if (param.probname && (data.name.indexOf(param.probname) != -1)) return false;
+  }
   if (param.field) {
     if (param.fieldexact) {
       if (data.field != param.field) return false;
@@ -166,6 +172,7 @@ function filter(data) {
 function applyClick() {
   var newparams = [];
   if ($('#f-name').val()) newparams.push('name=' + $('#f-name').val());
+  if ($('#f-name-not').prop('checked')) newparams.push('name-not=true');
   var num = 0;
   if ($('#f-field-a').prop('checked')) num += 1;
   if ($('#f-field-c').prop('checked')) num += 2;
