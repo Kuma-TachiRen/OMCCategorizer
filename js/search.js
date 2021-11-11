@@ -61,6 +61,10 @@ window.onload = function () {
     if (param.ca) $('#f-ca').prop('checked', true);
     param.ca_not = getParam('ca_not') == 'true';
     if (param.ca_not) $('#f-ca-not').prop('checked', true);
+    param.official = getParam('official') == 'true';
+    if (param.official) $('#f-official').prop('checked', true);
+    param.voluntary = getParam('voluntary') == 'true';
+    if (param.voluntary) $('#f-voluntary').prop('checked', true);
 
     // get localStorage
     storage_available = isLocalStorageAvailable();
@@ -165,6 +169,8 @@ function filter(data) {
   if (param.category && !data.category.includes(param.category)) return false;
   if (param.ca && !param.ca_not && !local_storage.CAstatus[data.problemid]) return false;
   if (!param.ca && param.ca_not && local_storage.CAstatus[data.problemid]) return false;
+  if (param.official && !param.voluntary && data.voluntary) return false;
+  if (!param.official && param.voluntary && !data.voluntary) return false;
   return true;
 }
 
@@ -172,7 +178,7 @@ function filter(data) {
 function applyClick() {
   var newparams = [];
   if ($('#f-name').val()) newparams.push('name=' + $('#f-name').val());
-  if ($('#f-name-not').prop('checked')) newparams.push('name-not=true');
+  if ($('#f-name-not').prop('checked')) newparams.push('name_not=true');
   var num = 0;
   if ($('#f-field-a').prop('checked')) num += 1;
   if ($('#f-field-c').prop('checked')) num += 2;
