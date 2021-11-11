@@ -131,7 +131,7 @@ function problemColumn(data) {
   return '<tr class="problem-column"' + isCA + '>'
     + '<td class="pl_name"><p hidden>' + data.name + '</p>'
     + (local_storage.CAshow ? '<span class="ca-circle" ' + isCA + 'id="ca-' + data.problemid + '" onclick="caClick(' + data.problemid + ')"></span>' : '')
-    + '<a ' + isVol + 'href="https://onlinemathcontest.com/contests/' + data.contestid + '/tasks/' + data.problemid + '">' + data.name + '</a></td>'
+    + '<a ' + isVol + 'href="https://onlinemathcontest.com/contests/' + data.contestid + '/tasks/' + data.problemid + '" target="_blank" rel="noopener noreferrer">' + data.name + '</a></td>'
     + '<td class="pl_point"><a href="search?point_min=' + data.point + '&point_max=' + data.point + '">' + data.point + '</a></td>'
     + '<td class="pl_field">' + numToField(data.field) + '</td>'
     + '<td class="pl_category">' + categories.join('/') + '</td>'
