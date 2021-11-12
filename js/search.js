@@ -82,16 +82,11 @@ $(function () {
   if (!local_storage.CAstatus) local_storage.CAstatus = {};
   saveStorage();
 
-  // stop propagation from a
-  $('a').click(function (event) {
-    event.stopPropagation();
-  });
-
   // get category
   $.getJSON("./data/category.json", function () { })
     .done(function (data) {
       for (var i in data) {
-        categorydic[data[i].id] = '<a href=search?category=' + data[i].id + '>' + data[i].display + '</a>';
+        categorydic[data[i].id] = '<a onclick="stopPropagation(event)" href=search?category=' + data[i].id + '>' + data[i].display + '</a>';
         $('#f-category').append('<option value="' + data[i].id + '">' + data[i].display + '</option>');
         if (data[i].id == param.category) {
           $('#f-category').val(data[i].id);
@@ -117,6 +112,9 @@ $(function () {
             probList.sort('pl_name', { order: 'asc' });
           }
           loaded();
+          // stop propagation from a
+          $('a').click();
+
         })
         .fail(function () {
           alert("Couldn't get the data of problems");
@@ -143,12 +141,16 @@ function problemColumn(data) {
   var isVol = (data.voluntary ? 'voluntary=true ' : '');
   return '<tr class="problem-column" id="prob-' + data.problemid + '"onclick="caClick(' + data.problemid + ')"' + isCA + '>'
     + '<td class="pl_name"><p hidden>' + data.name + '</p>'
-    + '<a ' + isVol + 'href="https://onlinemathcontest.com/contests/' + data.contestid + '/tasks/' + data.problemid + '" target="_blank" rel="noopener noreferrer">' + data.name + '</a></td>'
-    + '<td class="pl_point"><a href="search?point_min=' + data.point + '&point_max=' + data.point + '">' + data.point + '</a></td>'
+    + '<a onclick="stopPropagation(event)"' + isVol + 'href="https://onlinemathcontest.com/contests/' + data.contestid + '/tasks/' + data.problemid + '" target="_blank" rel="noopener noreferrer">' + data.name + '</a></td>'
+    + '<td class="pl_point"><a onclick="stopPropagation(event)" href="search?point_min=' + data.point + '&point_max=' + data.point + '">' + data.point + '</a></td>'
     + '<td class="pl_field">' + numToField(data.field) + '</td>'
     + '<td class="pl_category">' + categories.join('/') + '</td>'
     + '<td class="pl_keyword">' + data.keyword.join('/') + '</td>'
     + '</tr>'
+}
+
+function stopPropagation(event) {
+  event.stopPropagation();
 }
 
 function caClick(id) {
@@ -242,9 +244,9 @@ function saveStorage() {
 
 function numToField(num) {
   var field = [];
-  if (num & 1) field.push('<a href="search?field=1">A</a>');
-  if (num & 2) field.push('<a href="search?field=2">C</a>');
-  if (num & 4) field.push('<a href="search?field=4">G</a>');
-  if (num & 8) field.push('<a href="search?field=8">N</a>');
+  if (num & 1) field.push('<a onclick="stopPropagation(event)" href="search?field=1">A</a>');
+  if (num & 2) field.push('<a onclick="stopPropagation(event)" href="search?field=2">C</a>');
+  if (num & 4) field.push('<a onclick="stopPropagation(event)" href="search?field=4">G</a>');
+  if (num & 8) field.push('<a onclick="stopPropagation(event)" href="search?field=8">N</a>');
   return field.join('/');
 }
