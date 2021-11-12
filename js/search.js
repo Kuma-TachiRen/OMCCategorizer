@@ -113,6 +113,7 @@ $(function () {
             probList = new List('problem-list', plOptions);
             probList.sort('pl_name', { order: 'asc' });
           }
+          loaded();
         })
         .fail(function () {
           alert("Couldn't get the data of problems");
@@ -126,7 +127,7 @@ $(function () {
   $('#f-reset').on('click', function () {
     window.location.href = 'search';
   });
-  loaded();
+  window.setTimeout(loaded, 5000);
 });
 
 function problemColumn(data) {
