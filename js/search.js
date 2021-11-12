@@ -67,6 +67,8 @@ $(function () {
   if (param.ca) chkboxCheck('f-ca');
   param.ca_not = getParam('ca_not') == 'true';
   if (param.ca_not) chkboxCheck('f-ca-not');
+  param.ca_show = getParam('ca_show') == 'true';
+  if (param.ca_show) chkboxCheck('f-ca-show');
   param.official = getParam('official') == 'true';
   if (param.official) chkboxCheck('f-official');
   param.voluntary = getParam('voluntary') == 'true';
@@ -80,8 +82,6 @@ $(function () {
     if (localStorage.getItem('OMCCategorization')) local_storage = JSON.parse(localStorage.getItem('OMCCategorization'));
   }
   if (!local_storage.CAstatus) local_storage.CAstatus = {};
-  if (!local_storage.CAshow) local_storage.CAshow = false;
-  else $('#f-ca-show').prop('checked', true);
   saveStorage();
 
   // get category
@@ -138,7 +138,7 @@ function problemColumn(data) {
   var isVol = (data.voluntary ? 'voluntary=true ' : '');
   return '<tr class="problem-column"' + isCA + '>'
     + '<td class="pl_name"><p hidden>' + data.name + '</p>'
-    + (local_storage.CAshow ? '<span class="ca-button" ' + isCA + 'id="ca-' + data.problemid + '" onclick="caClick(' + data.problemid + ')"></span>' : '')
+    + (param.ca_show ? '<span class="ca-button" ' + isCA + 'id="ca-' + data.problemid + '" onclick="caClick(' + data.problemid + ')"></span>' : '')
     + '<a ' + isVol + 'href="https://onlinemathcontest.com/contests/' + data.contestid + '/tasks/' + data.problemid + '" target="_blank" rel="noopener noreferrer">' + data.name + '</a></td>'
     + '<td class="pl_point"><a href="search?point_min=' + data.point + '&point_max=' + data.point + '">' + data.point + '</a></td>'
     + '<td class="pl_field">' + numToField(data.field) + '</td>'
@@ -184,31 +184,31 @@ function filter(data) {
 
 
 function applyClick() {
-  var newparams = [];
-  if ($('#f-name').val()) newparams.push('name=' + $('#f-name').val());
-  if ($('#f-name-not').prop('checked')) newparams.push('name_not=true');
+  var newparam = [];
+  if ($('#f-name').val()) newparam.push('name=' + $('#f-name').val());
+  if ($('#f-name-not').prop('checked')) newparam.push('name_not=true');
   var num = 0;
   if ($('#f-field-a').prop('checked')) num += 1;
   if ($('#f-field-c').prop('checked')) num += 2;
   if ($('#f-field-g').prop('checked')) num += 4;
   if ($('#f-field-n').prop('checked')) num += 8;
-  if (num) newparams.push('field=' + num);
-  if ($('#f-field-exact').prop('checked')) newparams.push('field_exact=true');
+  if (num) newparam.push('field=' + num);
+  if ($('#f-field-exact').prop('checked')) newparam.push('field_exact=true');
   if ($('#f-point-min').val() && $('#f-point-max').val() && !($('#f-point-min').val() == 0 && $('#f-point-max').val() == 1000)) {
-    newparams.push('point_min=' + $('#f-point-min').val());
-    newparams.push('point_max=' + $('#f-point-max').val());
+    newparam.push('point_min=' + $('#f-point-min').val());
+    newparam.push('point_max=' + $('#f-point-max').val());
   }
-  if ($('#f-category').val()) newparams.push('category=' + $('#f-category').val());
-  if ($('#f-keyword').val()) newparams.push('keyword=' + $('#f-keyword').val());
-  if ($('#f-ca').prop('checked')) newparams.push('ca=true');
-  if ($('#f-ca-not').prop('checked')) newparams.push('ca_not=true');
-  if ($('#f-official').prop('checked')) newparams.push('official=true');
-  if ($('#f-voluntary').prop('checked')) newparams.push('voluntary=true');
-  local_storage.CAshow = ($('#f-ca-show').prop('checked') == true);
+  if ($('#f-category').val()) newparam.push('category=' + $('#f-category').val());
+  if ($('#f-keyword').val()) newparam.push('keyword=' + $('#f-keyword').val());
+  if ($('#f-ca').prop('checked')) newparam.push('ca=true');
+  if ($('#f-ca-not').prop('checked')) newparam.push('ca_not=true');
+  if ($('#f-ca-show').prop('checked')) newparam.push('ca_show=true');
+  if ($('#f-official').prop('checked')) newparam.push('official=true');
+  if ($('#f-voluntary').prop('checked')) newparam.push('voluntary=true');
   saveStorage();
   // page move
-  if (newparams.length == 0) window.location.href = 'search';
-  else window.location.href = 'search?' + newparams.join('&');
+  if (newparam.length == 0) window.location.href = 'search';
+  else window.location.href = 'search?' + newparam.join('&');
 }
 
 function getParam(name, url) {
