@@ -165,7 +165,7 @@ function caClick(id) {
 }
 
 function filter(data) {
-  if (param.name_not) {
+  if (!param.name_not) {
     if (param.probname && (data.name.indexOf(param.probname) == -1)) return false;
   } else {
     if (param.probname && (data.name.indexOf(param.probname) != -1)) return false;
