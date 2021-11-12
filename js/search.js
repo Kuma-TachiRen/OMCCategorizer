@@ -67,8 +67,6 @@ $(function () {
   if (param.ca) chkboxCheck('f-ca');
   param.ca_not = getParam('ca_not') == 'true';
   if (param.ca_not) chkboxCheck('f-ca-not');
-  param.ca_show = getParam('ca_show') == 'true';
-  if (param.ca_show) chkboxCheck('f-ca-show');
   param.official = getParam('official') == 'true';
   if (param.official) chkboxCheck('f-official');
   param.voluntary = getParam('voluntary') == 'true';
@@ -127,6 +125,11 @@ $(function () {
   $('#f-reset').on('click', function () {
     window.location.href = 'search';
   });
+
+  // stop propagation from a
+  $('a').click(function(event){
+    event.stopPropagation();
+  });
   window.setTimeout(loaded, 5000);
 });
 
@@ -137,9 +140,8 @@ function problemColumn(data) {
   }
   var isCA = (local_storage.CAstatus[data.problemid] ? 'ca=true ' : '');
   var isVol = (data.voluntary ? 'voluntary=true ' : '');
-  return '<tr class="problem-column"' + isCA + '>'
+  return '<tr class="problem-column" id="prob-' + data.problemid + '"onclick="caClick(' + data.problemid + ')"' + isCA + '>'
     + '<td class="pl_name"><p hidden>' + data.name + '</p>'
-    + (param.ca_show ? '<span class="ca-button" ' + isCA + 'id="ca-' + data.problemid + '" onclick="caClick(' + data.problemid + ')"></span>' : '')
     + '<a ' + isVol + 'href="https://onlinemathcontest.com/contests/' + data.contestid + '/tasks/' + data.problemid + '" target="_blank" rel="noopener noreferrer">' + data.name + '</a></td>'
     + '<td class="pl_point"><a href="search?point_min=' + data.point + '&point_max=' + data.point + '">' + data.point + '</a></td>'
     + '<td class="pl_field">' + numToField(data.field) + '</td>'
@@ -150,12 +152,10 @@ function problemColumn(data) {
 
 function caClick(id) {
   if (local_storage.CAstatus[id]) {
-    $('#ca-' + id).removeAttr('ca');
-    $('#ca-' + id).parent().parent().removeAttr('ca');
+    $('#prob-' + id).removeAttr('ca');
     local_storage.CAstatus[id] = false;
   } else {
-    $('#ca-' + id).attr('ca', true);
-    $('#ca-' + id).parent().parent().attr('ca', true);
+    $('#prob-' + id).attr('ca', true);
     local_storage.CAstatus[id] = true;
   }
   saveStorage();

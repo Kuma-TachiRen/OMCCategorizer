@@ -230,7 +230,7 @@ summary {
 }
 
 .form-group th {
-  font-size: small;
+  font-size: 16px;
   padding: 0 5px;
   min-width: 80px;
   font-weight: bold;
@@ -260,11 +260,11 @@ summary {
   width: 1px;
   height: 16px;
   background-color: gray;
-  margin: 10px;
+  margin: 0 10px;
 }
 
 .chkbox {
-  margin: 0 4px;
+  margin: 4px 4px;
 }
 
 .chkbox input[type=checkbox] {
@@ -275,7 +275,7 @@ summary {
   user-select: none;
   font-weight: normal;
   font-size: 14px;
-  line-height: 14px;
+  line-height: 1.2;
   display: inline-block;
   cursor: pointer;
   position: relative;
@@ -332,7 +332,7 @@ summary {
 }
 
 .problem-list td {
-  font-size: small;
+  font-size: 14px;
   padding: 10px 10px;
   text-align: center;
   border-bottom: 1px solid whitesmoke;
@@ -366,30 +366,6 @@ summary {
 
 .problem-column[ca=true] {
   background-color: #ddffdd;
-}
-
-.ca-button {
-  cursor: pointer;
-  user-select: none;
-}
-
-.ca-button::before {
-  display: inline-block;
-  vertical-align: middle;
-  width: 20px;
-  content: '-';
-  color: white;
-  background-color: #888888;
-  font-size: 9px;
-  font-weight: bold;
-  border-radius: 3px;
-  padding: 2px;
-  margin: 4px;
-}
-
-.ca-button[ca=true]::before {
-  content: 'CA';
-  background-color: #66dd66;
 }
 
 .problem-column a[voluntary=true]::after {
@@ -439,4 +415,55 @@ summary {
   background: darkgrey;
   color: white;
   font-weight: bold;
+}
+
+.tip {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tip::after {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  left: 7px;
+  border-radius: 50%;
+  content: '?';
+  font-size: 8px;
+  text-align: center;
+  color: white;
+  background-color: black;
+}
+
+.tip .tip-text {
+  position: absolute;
+  display: none;
+  color: white;
+  font-weight: normal;
+  font-size: 12px;
+  background-color: black;
+  border-radius: 5px;
+  padding: 5px;
+  width: 150px;
+  z-index: 9999;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -110%);
+}
+
+.tip .tip-text::before {
+  display: inline-block;
+  content: '';
+  width: 6px;
+  height: 6px;
+  background-color: black;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-3px, -3px) rotate(45deg);
+}
+
+.tip:hover .tip-text {
+  display: inline-block;
 }
