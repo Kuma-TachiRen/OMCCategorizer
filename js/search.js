@@ -82,6 +82,11 @@ $(function () {
   if (!local_storage.CAstatus) local_storage.CAstatus = {};
   saveStorage();
 
+  // stop propagation from a
+  $('a').click(function (event) {
+    event.stopPropagation();
+  });
+
   // get category
   $.getJSON("./data/category.json", function () { })
     .done(function (data) {
@@ -126,10 +131,6 @@ $(function () {
     window.location.href = 'search';
   });
 
-  // stop propagation from a
-  $('a').click(function(event){
-    event.stopPropagation();
-  });
   window.setTimeout(loaded, 5000);
 });
 
