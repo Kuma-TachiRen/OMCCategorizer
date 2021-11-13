@@ -93,7 +93,8 @@
                 <div class="tip">
                   <div class="tip-text">各問題の背景をクリックで切り替えできます</div>
                 </div>
-                :</th>
+                :
+              </th>
               <td>
                 <div class="chkbox"><input type="checkbox" id="f-ca" name="f-ca"><label for="f-ca">CA済</label>
                 </div>
@@ -103,13 +104,22 @@
               </td>
             </tr>
             <tr class="form-group">
-              <th>公式/有志:</th>
+              <th>形態:</th>
               <td>
-                <div class="chkbox"><input type="checkbox" id="f-official" name="f-official"><label
-                    for="f-official">公式コン</label>
+                <div class="chkbox"><input type="checkbox" id="f-type-b" name="f-type-b"> <label
+                    for="f-type-b">4b</label>
                 </div>
-                <div class="chkbox"><input type="checkbox" id="f-voluntary" name="f-voluntary"><label
-                    for="f-voluntary">有志コン</label>
+                <div class="chkbox"><input type="checkbox" id="f-type-n" name="f-type-n"> <label
+                    for="f-type-n">無印</label>
+                </div>
+                <div class="chkbox"><input type="checkbox" id="f-type-e" name="f-type-e"> <label
+                    for="f-type-e">4e</label>
+                </div>
+                <div class="chkbox"><input type="checkbox" id="f-type-v" name="f-type-v"> <label
+                    for="f-type-v">有志</label>
+                </div>
+                <div class="chkbox"><input type="checkbox" id="f-type-o" name="f-type-o"> <label
+                    for="f-type-o">旧(~OMC005)</label>
                 </div>
               </td>
             </tr>
@@ -123,11 +133,11 @@
         <table class="problem-list">
           <thead>
             <tr>
-              <th class="sort" data-sort="pl_name" width="150px">問題名</th>
-              <th class="sort" data-sort="pl_point" width="50px">配点</th>
-              <th class="sort" data-sort="pl_field" width="50px">分野</th>
-              <th class="sort" data-sort="pl_category">カテゴリ</th>
-              <th class="sort" data-sort="pl_keyword">キーワード</th>
+              <th id="pl-name-head" class="sort" data-sort="pl-name" width="150px">問題名</th>
+              <th class="sort" data-sort="pl-point" width="50px">配点</th>
+              <th class="sort" data-sort="pl-field" width="50px">分野</th>
+              <th class="sort" data-sort="pl-category">カテゴリ</th>
+              <th class="sort" data-sort="pl-keyword">キーワード</th>
             </tr>
           </thead>
           <tbody id="problem-data" class="list">

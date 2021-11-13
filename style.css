@@ -354,24 +354,45 @@ summary {
   content: "▲";
 }
 
-.pl-name {
-  display: inline-block;
-  vertical-align: middle;
-}
-
 .problem-column[ca=true] {
   background-color: #ddffdd;
 }
 
-.problem-column a[voluntary=true]::after {
-  content: '有志';
-  color: white;
-  background-color: black;
+.pl-name {
+  text-align: left !important;
+}
+
+.pl-name a::before {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  content: attr(type);
+  color: black;
+  background-color: whitesmoke;
+  border: 1px solid gray;
+  height: 14px;
+  width: 22px;
   font-size: 8px;
   font-weight: bold;
-  border-radius: 3px;
-  padding: 2px;
-  margin: 2px;
+  border-radius: 4px;
+  padding: 2px 3px;
+  margin: 3px;
+}
+
+.pl-name a[type="4b"]::before {
+  background-color: #ddffdd;
+}
+
+.pl-name a[type="無印"]::before {
+  background-color: #ddddff;
+}
+
+.pl-name a[type="4e"]::before {
+  background-color: #ffdddd;
+}
+
+.pl-writer a {
+  font-size: 12px;
 }
 
 .pagination {

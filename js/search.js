@@ -1,5 +1,5 @@
 var plOptions = {
-  valueNames: ['pl_name', 'pl_point', 'pl_field', 'pl_category', 'pl_keyword'],
+  valueNames: ['pl-writer', 'pl-name', 'pl-point', 'pl-field', 'pl-category', 'pl-keyword'],
   page: 100,
   pagination: {
     paginationClass: 'pagination',
@@ -12,22 +12,35 @@ var param = {};
 
 var categorydic = {};
 
+var typelist = {
+  b: '4b',
+  n: '無印',
+  e: '4e',
+  v: '有志',
+  o: '旧'
+}
+
 var local_storage = {};
 var storage_available;
 
 $(function () {
   // get URL parameter
-  param.probname = getParam('name');
   var param_changed = false;
-  function chkboxCheck(id) { $('#' + id).prop('checked', true); param_changed = true; }
-  if (param.probname) {
-    $('#f-name').val(param.probname);
+  function chkboxCheck(paramid, htmlid) {
+    param[paramid] = getParam(paramid) == 'true';
+    if (param[paramid]) {
+      $('#' + htmlid).prop('checked', true);
+      param_changed = true;
+    }
+  }
+  param.name = getParam('name');
+  if (param.name) {
+    $('#f-name').val(param.name);
     param_changed = true;
   } else {
-    param.probname = "";
+    param.name = "";
   }
-  param.name_not = getParam('name_not') == 'true';
-  if (param.name_not) chkboxCheck('f-name-not');
+  chkboxCheck('name_not', 'f-name-not');
   param.field = getParam('field');
   if (param.field) {
     var num = parseInt(param.field);
@@ -39,8 +52,7 @@ $(function () {
   } else {
     param.field = 0;
   }
-  param.fieldexact = getParam('field_exact') == 'true';
-  if (param.fieldexact) chkboxCheck('f-field-exact');
+  chkboxCheck('field_exact', 'f-field-exact')
   param.point_min = parseInt(getParam('point_min'));
   if (Number.isInteger(param.point_min)) {
     $('#f-point-min').val(param.point_min);
@@ -63,16 +75,22 @@ $(function () {
   } else {
     param.keyword = '';
   }
-  param.ca = getParam('ca') == 'true';
-  if (param.ca) chkboxCheck('f-ca');
-  param.ca_not = getParam('ca_not') == 'true';
-  if (param.ca_not) chkboxCheck('f-ca-not');
-  param.official = getParam('official') == 'true';
-  if (param.official) chkboxCheck('f-official');
-  param.voluntary = getParam('voluntary') == 'true';
-  if (param.voluntary) chkboxCheck('f-voluntary');
+  chkboxCheck('ca', 'f-ca');
+  chkboxCheck('ca_not', 'f-ca-not');
+
+  param.type = {};
+  for (let key in typelist) {
+    chkboxCheck('type_' + key, 'f-type-' + key);
+  };
 
   if (param_changed) $('#setting').attr('open', true);
+
+  if (getParam('writer_show') == 'true') {
+    param.writer_show = true;
+    $('#pl-name-head').before('<th class="sort" data-sort="pl-writer" width="100px">writer</th>');
+    param.writer = getParam('writer');
+    if (!param.writer) param.writer = '';
+  }
 
   // get localStorage
   storage_available = isLocalStorageAvailable();
@@ -86,8 +104,8 @@ $(function () {
   $.getJSON("./data/category.json", function () { })
     .done(function (data) {
       for (var i in data) {
-        categorydic[data[i].id] = '<a onclick="stopPropagation(event)" href=search?category=' + data[i].id + '>' + data[i].display + '</a>';
-        $('#f-category').append('<option value="' + data[i].id + '">' + data[i].display + '</option>');
+        categorydic[data[i].id] = `<a onclick="stopPropagation(event)" href=search?category=${data[i].id}>${data[i].display}</a>`;
+        $('#f-category').append(`<option value="${data[i].id}">${data[i].display}</option>`);
         if (data[i].id == param.category) {
           $('#f-category').val(data[i].id);
         }
@@ -105,11 +123,11 @@ $(function () {
               count_match++;
             }
           }
-          $('#search-result').text('検索結果：' + count_match + '/' + count_total + '件');
+          $('#search-result').text(`検索結果：${count_match}/${count_total}件`);
           if (count_match) {
             $('#problem-list').append('<ul class="pagination"></ul>');
             probList = new List('problem-list', plOptions);
-            probList.sort('pl_name', { order: 'asc' });
+            probList.sort('pl-name', { order: 'asc' });
           }
           loaded();
           // stop propagation from a
@@ -138,15 +156,15 @@ function problemColumn(data) {
     categories.push(categorydic[data.category[j]]);
   }
   var isCA = (local_storage.CAstatus[data.problemid] ? 'ca=true ' : '');
-  var isVol = (data.voluntary ? 'voluntary=true ' : '');
-  return '<tr class="problem-column" id="prob-' + data.problemid + '"onclick="caClick(' + data.problemid + ')"' + isCA + '>'
-    + '<td class="pl_name"><p hidden>' + data.name + '</p>'
-    + '<a onclick="stopPropagation(event)"' + isVol + 'href="https://onlinemathcontest.com/contests/' + data.contestid + '/tasks/' + data.problemid + '" target="_blank" rel="noopener noreferrer">' + data.name + '</a></td>'
-    + '<td class="pl_point"><a onclick="stopPropagation(event)" href="search?point_min=' + data.point + '&point_max=' + data.point + '">' + data.point + '</a></td>'
-    + '<td class="pl_field">' + numToField(data.field) + '</td>'
-    + '<td class="pl_category">' + categories.join('/') + '</td>'
-    + '<td class="pl_keyword">' + data.keyword.join('/') + '</td>'
-    + '</tr>'
+  return `<tr class="problem-column" id="prob-${data.problemid}" onclick="caClick(${data.problemid})"${isCA}>`
+    + (param.writer_show ? `<td class="pl-writer"><a onclick="stopPropagation(event)" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>` : '')
+    + `<td class="pl-name"><p hidden>${data.name}</p>`
+    + `<a onclick="stopPropagation(event)" type="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
+    + `<td class="pl-point"><a onclick="stopPropagation(event)" href="search?point_min=${data.point}&point_max=${data.point}">${data.point}</a></td>`
+    + `<td class="pl-field">${numToField(data.field)}</td>`
+    + `<td class="pl-category">${categories.join(' / ')}</td>`
+    + `<td class="pl-keyword">${data.keyword.join(' / ')}</td>`
+    + `</tr>`
 }
 
 function stopPropagation(event) {
@@ -155,10 +173,10 @@ function stopPropagation(event) {
 
 function caClick(id) {
   if (local_storage.CAstatus[id]) {
-    $('#prob-' + id).removeAttr('ca');
+    $(`#prob-${id}`).removeAttr('ca');
     local_storage.CAstatus[id] = false;
   } else {
-    $('#prob-' + id).attr('ca', true);
+    $(`#prob-${id}`).attr('ca', true);
     local_storage.CAstatus[id] = true;
   }
   saveStorage();
@@ -166,12 +184,12 @@ function caClick(id) {
 
 function filter(data) {
   if (!param.name_not) {
-    if (param.probname && (data.name.indexOf(param.probname) == -1)) return false;
+    if (param.name && (data.name.indexOf(param.name) == -1)) return false;
   } else {
-    if (param.probname && (data.name.indexOf(param.probname) != -1)) return false;
+    if (param.name && (data.name.indexOf(param.name) != -1)) return false;
   }
   if (param.field) {
-    if (param.fieldexact) {
+    if (param.field_exact) {
       if (data.field != param.field) return false;
     } else {
       if ((data.field & param.field) == 0) return false;
@@ -181,8 +199,10 @@ function filter(data) {
   if (param.category && !data.category.includes(param.category)) return false;
   if (param.ca && !param.ca_not && !local_storage.CAstatus[data.problemid]) return false;
   if (!param.ca && param.ca_not && local_storage.CAstatus[data.problemid]) return false;
-  if (param.official && !param.voluntary && data.voluntary) return false;
-  if (!param.official && param.voluntary && !data.voluntary) return false;
+  for (let key in typelist) {
+    if (param['type_' + key] && data.type != key) return false;
+  };
+  if (param.writer_show && data.writer.indexOf(param.writer) == -1) return false;
   return true;
 }
 
@@ -207,9 +227,11 @@ function applyClick() {
   if ($('#f-ca').prop('checked')) newparam.push('ca=true');
   if ($('#f-ca-not').prop('checked')) newparam.push('ca_not=true');
   if ($('#f-ca-show').prop('checked')) newparam.push('ca_show=true');
-  if ($('#f-official').prop('checked')) newparam.push('official=true');
-  if ($('#f-voluntary').prop('checked')) newparam.push('voluntary=true');
-  saveStorage();
+  for (let key in typelist) {
+    if ($(`#f-type-${key}`).prop('checked')) newparam.push(`type_${key}=true`);
+  };
+  if (param.writer_show) newparam.push('writer_show=true');
+  if (param.writer) newparam.push('writer=' + param.writer);
   // page move
   if (newparam.length == 0) window.location.href = 'search';
   else window.location.href = 'search?' + newparam.join('&');
