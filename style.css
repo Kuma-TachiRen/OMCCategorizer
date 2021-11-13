@@ -227,7 +227,7 @@ summary {
 .form-group th {
   font-size: 16px;
   padding: 0 5px;
-  min-width: 80px;
+  min-width: 100px;
   font-weight: bold;
 }
 
@@ -358,6 +358,10 @@ summary {
   background-color: #ddffdd;
 }
 
+.problem-column a {
+  cursor: pointer;
+}
+
 .pl-name {
   text-align: left !important;
 }
@@ -366,7 +370,7 @@ summary {
   position: relative;
   display: inline-block;
   text-align: center;
-  content: attr(type);
+  content: attr(type-disp);
   color: black;
   background-color: whitesmoke;
   border: 1px solid gray;
@@ -379,15 +383,15 @@ summary {
   margin: 3px;
 }
 
-.pl-name a[type="4b"]::before {
+.pl-name a[type="b"]::before {
   background-color: #ddffdd;
 }
 
-.pl-name a[type="無印"]::before {
+.pl-name a[type="n"]::before {
   background-color: #ddddff;
 }
 
-.pl-name a[type="4e"]::before {
+.pl-name a[type="e"]::before {
   background-color: #ffdddd;
 }
 
@@ -461,7 +465,8 @@ summary {
   background-color: black;
   border-radius: 5px;
   padding: 5px;
-  width: 150px;
+  width: 140px;
+  text-align: center;
   z-index: 9999;
   top: 0;
   left: 50%;

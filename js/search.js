@@ -24,6 +24,7 @@ var local_storage = {};
 var storage_available;
 
 $(function () {
+  window.setTimeout(loaded, 5000);
   // get URL parameter
   var param_changed = false;
   function chkboxCheck(paramid, htmlid) {
@@ -110,7 +111,7 @@ $(function () {
   $.getJSON("./data/category.json", function () { })
     .done(function (data) {
       for (var i in data) {
-        categorydic[data[i].id] = `<a onclick="stopPropagation(event)" href=search?category=${data[i].id}>${data[i].display}</a>`;
+        categorydic[data[i].id] = paramLink({ category: `'${data[i].id}'` }, data[i].display);
         $('#f-category').append(`<option value="${data[i].id}">${data[i].display}</option>`);
         if (data[i].id == param.category) {
           $('#f-category').val(data[i].id);
@@ -122,13 +123,15 @@ $(function () {
         .done(function (data) {
           var count_match = 0;
           var count_total = 0;
+          var column_list = [];
           for (var i in data) {
             count_total++;
             if (filter(data[i])) {
-              $('#problem-data').append(problemColumn(data[i]));
+              column_list.push(problemColumn(data[i]));
               count_match++;
             }
           }
+          $('#problem-data').append(column_list.join(''));
           $('#search-result').text(`検索結果：${count_match}/${count_total}件`);
           if (count_match) {
             $('#problem-list').append('<ul class="pagination"></ul>');
@@ -136,9 +139,6 @@ $(function () {
             probList.sort('pl-name', { order: 'asc' });
           }
           loaded();
-          // stop propagation from a
-          $('a').click();
-
         })
         .fail(function () {
           alert("Couldn't get the data of problems");
@@ -148,33 +148,48 @@ $(function () {
       alert("Couldn't get the data of categories");
     });
 
-  $('#f-apply').on('click', applyClick);
+  $('#f-apply').on('click', applyFilter);
   $('#f-reset').on('click', function () {
     window.location.href = 'search';
   });
-
-  window.setTimeout(loaded, 5000);
 });
+
+function stopPropagation(e) {
+  e.stopPropagation();
+}
+
+function paramLink(p, d) {
+  return `<a onclick="stopPropagation(event);applyFilter({${Object.entries(p).map((e) => { return `${e[0]}:${e[1]}`; }).join(',')}})">${d}</a>`;
+}
+
+function numToField(num) {
+  var field = [];
+  if (num & 1) field.push(paramLink({ field: 1 }, 'A'));
+  if (num & 2) field.push(paramLink({ field: 2 }, 'C'));
+  if (num & 4) field.push(paramLink({ field: 4 }, 'G'));
+  if (num & 8) field.push(paramLink({ field: 8 }, 'N'));
+  return field.join('/');
+}
 
 function problemColumn(data) {
   var categories = [];
-  for (var j in data.category) {
-    categories.push(categorydic[data.category[j]]);
+  for (var i in data.category) {
+    categories.push(categorydic[data.category[i]]);
+  }
+  var keywords = [];
+  for (var i in data.keyword) {
+    keywords.push(paramLink({ keyword: `'${data.keyword[i]}'` }, data.keyword[i]));
   }
   var isCA = (local_storage.CAstatus[data.problemid] ? 'ca=true ' : '');
   return `<tr class="problem-column" id="prob-${data.problemid}" onclick="caClick(${data.problemid})"${isCA}>`
     + (param.writer_show ? `<td class="pl-writer"><a onclick="stopPropagation(event)" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>` : '')
     + `<td class="pl-name"><p hidden>${data.name}</p>`
-    + `<a onclick="stopPropagation(event)" type="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
-    + `<td class="pl-point"><a onclick="stopPropagation(event)" href="search?point_min=${data.point}&point_max=${data.point}">${data.point}</a></td>`
+    + `<a onclick="stopPropagation(event)" type="${data.type}" type-disp="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
+    + `<td class="pl-point">${paramLink({ point_min: data.point, point_max: data.point }, data.point)}</td>`
     + `<td class="pl-field">${numToField(data.field)}</td>`
     + `<td class="pl-category">${categories.join(' / ')}</td>`
-    + `<td class="pl-keyword">${data.keyword.join(' / ')}</td>`
+    + `<td class="pl-keyword">${keywords.join(' / ')}</td>`
     + `</tr>`
-}
-
-function stopPropagation(event) {
-  event.stopPropagation();
 }
 
 function caClick(id) {
@@ -203,6 +218,7 @@ function filter(data) {
   }
   if (param.point_min && param.point_max && ((data.point < param.point_min) || (data.point > param.point_max))) return false;
   if (param.category && !data.category.includes(param.category)) return false;
+  if (param.keyword && !data.keyword.includes(param.keyword)) return false;
   if (param.ca && !param.ca_not && !local_storage.CAstatus[data.problemid]) return false;
   if (!param.ca && param.ca_not && local_storage.CAstatus[data.problemid]) return false;
   if (param.type_any && !param.type[data.type]) return false;
@@ -211,34 +227,40 @@ function filter(data) {
 }
 
 
-function applyClick() {
-  var newparam = [];
-  if ($('#f-name').val()) newparam.push('name=' + $('#f-name').val());
-  if ($('#f-name-not').prop('checked')) newparam.push('name_not=true');
+function applyFilter(param_add = {}) {
+  var newparam = {};
+  if ($('#f-name').val()) newparam['name'] = $('#f-name').val();
+  if ($('#f-name-not').prop('checked')) newparam['name_not'] = true;
   var num = 0;
   if ($('#f-field-a').prop('checked')) num += 1;
   if ($('#f-field-c').prop('checked')) num += 2;
   if ($('#f-field-g').prop('checked')) num += 4;
   if ($('#f-field-n').prop('checked')) num += 8;
-  if (num) newparam.push('field=' + num);
-  if ($('#f-field-exact').prop('checked')) newparam.push('field_exact=true');
+  if (num) newparam['field'] = num;
+  if ($('#f-field-exact').prop('checked')) newparam['field_exact'] = true;
   if ($('#f-point-min').val() && $('#f-point-max').val() && !($('#f-point-min').val() == 0 && $('#f-point-max').val() == 1000)) {
-    newparam.push('point_min=' + $('#f-point-min').val());
-    newparam.push('point_max=' + $('#f-point-max').val());
+    newparam['point_min'] = $('#f-point-min').val();
+    newparam['point_max'] = $('#f-point-max').val();
   }
-  if ($('#f-category').val()) newparam.push('category=' + $('#f-category').val());
-  if ($('#f-keyword').val()) newparam.push('keyword=' + $('#f-keyword').val());
-  if ($('#f-ca').prop('checked')) newparam.push('ca=true');
-  if ($('#f-ca-not').prop('checked')) newparam.push('ca_not=true');
-  if ($('#f-ca-show').prop('checked')) newparam.push('ca_show=true');
+  if ($('#f-category').val()) newparam['category'] = $('#f-category').val();
+  if ($('#f-keyword').val()) newparam['keyword'] = $('#f-keyword').val();
+  if ($('#f-ca').prop('checked')) newparam['ca'] = true;
+  if ($('#f-ca-not').prop('checked')) newparam['ca_not'] = true;
+  if ($('#f-ca-show').prop('checked')) newparam['ca_show'] = true;
   for (let key in typelist) {
-    if ($(`#f-type-${key}`).prop('checked')) newparam.push(`type_${key}=true`);
+    if ($(`#f-type-${key}`).prop('checked')) newparam[`type_${key}`] = true;
   };
-  if (param.writer_show) newparam.push('writer_show=true');
-  if (param.writer) newparam.push('writer=' + param.writer);
+  if (param.writer_show) newparam['writer_show'] = true;
+  if (param.writer) newparam['writer'] = param.writer;
+  for (let key in param_add) { newparam[key] = param_add[key]; }
   // page move
   if (newparam.length == 0) window.location.href = 'search';
-  else window.location.href = 'search?' + newparam.join('&');
+  else window.location.href = 'search?'
+    + Object.entries(newparam).map((e) => {
+      let key = e[0];
+      let value = encodeURI(e[1]);
+      return `${key}=${value}`;
+    }).join('&');
 }
 
 function getParam(name, url) {
@@ -266,13 +288,4 @@ function saveStorage() {
   if (storage_available) {
     localStorage.setItem('OMCCategorization', JSON.stringify(local_storage));
   }
-}
-
-function numToField(num) {
-  var field = [];
-  if (num & 1) field.push('<a onclick="stopPropagation(event)" href="search?field=1">A</a>');
-  if (num & 2) field.push('<a onclick="stopPropagation(event)" href="search?field=2">C</a>');
-  if (num & 4) field.push('<a onclick="stopPropagation(event)" href="search?field=4">G</a>');
-  if (num & 8) field.push('<a onclick="stopPropagation(event)" href="search?field=8">N</a>');
-  return field.join('/');
 }
