@@ -79,8 +79,14 @@ $(function () {
   chkboxCheck('ca_not', 'f-ca-not');
 
   param.type = {};
+  param.type_any = false;
   for (let key in typelist) {
-    chkboxCheck('type_' + key, 'f-type-' + key);
+    param.type[key] = getParam('type_' + key) == 'true';
+    if (param.type[key]) {
+      $('#f-type-' + key).prop('checked', true);
+      param_changed = true;
+      param.type_any = true;
+    }
   };
 
   if (param_changed) $('#setting').attr('open', true);
@@ -199,9 +205,7 @@ function filter(data) {
   if (param.category && !data.category.includes(param.category)) return false;
   if (param.ca && !param.ca_not && !local_storage.CAstatus[data.problemid]) return false;
   if (!param.ca && param.ca_not && local_storage.CAstatus[data.problemid]) return false;
-  for (let key in typelist) {
-    if (param['type_' + key] && data.type != key) return false;
-  };
+  if (param.type_any && !param.type[data.type]) return false;
   if (param.writer_show && data.writer.indexOf(param.writer) == -1) return false;
   return true;
 }
