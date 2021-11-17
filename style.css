@@ -139,12 +139,12 @@ h2 {
   border-bottom: 1px solid gray;
 }
 
-p a {
+.body-contents a {
   color: cornflowerblue;
   text-decoration: underline;
 }
 
-p a:hover {
+.body-contents a:hover {
   color: palevioletred;
   text-decoration: underline;
 }
@@ -487,4 +487,27 @@ summary {
 
 .tip:hover .tip-text {
   display: inline-block;
+}
+
+.q-and-a dt {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.q-and-a dt::before {
+  content: 'Q.';
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.q-and-a dd {
+  margin-left: 0;
+  margin: 10px;
+}
+
+.q-and-a dd::before {
+  content: 'A.';
+  font-weight: bold;
+  margin-right: 5px;
 }
