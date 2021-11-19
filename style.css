@@ -42,6 +42,7 @@ header {
 }
 
 .nav-item a:hover {
+  color: white;
   text-decoration: underline;
 }
 
@@ -175,6 +176,7 @@ h2 {
 }
 
 .def-list dt a:hover {
+  color: black;
   text-decoration: underline;
 }
 
@@ -336,9 +338,11 @@ summary {
 .problem-list a {
   color: black;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .problem-list a:hover {
+  color: black;
   text-decoration: underline;
 }
 
@@ -356,10 +360,6 @@ summary {
 
 .problem-column[ca=true] {
   background-color: #ddffdd;
-}
-
-.problem-column a {
-  cursor: pointer;
 }
 
 .pl-name {
@@ -429,6 +429,7 @@ summary {
 
 .pagination li a:hover {
   background: lightgrey;
+  color: black;
 }
 
 .pagination li.active a {
