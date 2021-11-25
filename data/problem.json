@@ -350,5 +350,11 @@
 {"type":"b","contestid":"omc055","problemid":"222","name":"OMC055(C)","point":200,"writer":"t0b0","field":1,"category":["equation"],"keyword":[]},
 {"type":"b","contestid":"omc055","problemid":"258","name":"OMC055(D)","point":300,"writer":"ojamesi1357","field":2,"category":["count_up"],"keyword":[]},
 {"type":"b","contestid":"omc055","problemid":"259","name":"OMC055(E)","point":300,"writer":"ojamesi1357","field":4,"category":["polygon"],"keyword":[]},
-{"type":"b","contestid":"omc055","problemid":"305","name":"OMC055(F)","point":400,"writer":"Noya2ruler","field":2,"category":["count_up"],"keyword":[]}
+{"type":"b","contestid":"omc055","problemid":"305","name":"OMC055(F)","point":400,"writer":"Noya2ruler","field":2,"category":["count_up"],"keyword":[]},
+{"type":"n","contestid":"omc056","problemid":"230","name":"OMC056(A)","point":100,"writer":"F_Symmetry","field":1,"category":["min_max"],"keyword":[]},
+{"type":"n","contestid":"omc056","problemid":"291","name":"OMC056(B)","point":300,"writer":"F_Symmetry","field":2,"category":["prob_stat"],"keyword":[]},
+{"type":"n","contestid":"omc056","problemid":"1239","name":"OMC056(C)","point":300,"writer":"gnu_0624","field":8,"category":["sum"],"keyword":[]},
+{"type":"n","contestid":"omc056","problemid":"304","name":"OMC056(D)","point":400,"writer":"SanjutsuMatho","field":4,"category":["polygon"],"keyword":[]},
+{"type":"n","contestid":"omc056","problemid":"268","name":"OMC056(E)","point":500,"writer":"gnu_0624","field":2,"category":["count_up","equation"],"keyword":[]},
+{"type":"n","contestid":"omc056","problemid":"1735","name":"OMC056(F)","point":500,"writer":"sreisomc","field":8,"category":["prime"],"keyword":[]}
 ]
