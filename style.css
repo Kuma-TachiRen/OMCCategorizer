@@ -78,6 +78,7 @@ header {
     visibility: visible;
     opacity: 1;
   }
+
   100% {
     visibility: hidden;
     opacity: 0;
@@ -107,6 +108,7 @@ header {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
@@ -118,6 +120,7 @@ header {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
@@ -511,4 +514,27 @@ summary {
   content: 'A.';
   font-weight: bold;
   margin-right: 5px;
+}
+
+.status-data {
+  width: 160px;
+  height: 90px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-data .name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.status-data .value {
+  font-size: 26px;
+}
+
+.status-data .value::after {
+  font-size: 18px;
+  content: attr(max);
 }
