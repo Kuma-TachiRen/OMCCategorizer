@@ -1,6 +1,6 @@
 var plOptions = {
   valueNames: ['pl-writer', 'pl-name', 'pl-point', 'pl-field', 'pl-category', 'pl-keyword'],
-  page: 100,
+  page: 50,
   pagination: {
     paginationClass: 'pagination',
     innerWindow: 3,
@@ -105,6 +105,8 @@ $(function () {
     if (localStorage.getItem('OMCCategorization')) local_storage = JSON.parse(localStorage.getItem('OMCCategorization'));
   }
   if (!local_storage.CAstatus) local_storage.CAstatus = {};
+  if (!local_storage.ShowNonCAInfo) local_storage.ShowNonCAInfo = false;
+  else $('#f-non-ca-info').prop('checked', true);
   saveStorage();
 
   // get category
@@ -159,7 +161,7 @@ function stopPropagation(e) {
 }
 
 function paramLink(p, d) {
-  return `<a onclick="stopPropagation(event);applyFilter({${Object.entries(p).map((e) => { return `${e[0]}:${e[1]}`; }).join(',')}})">${d}</a>`;
+  return `<a onclick="stopPropagation(event);applyFilter({},{${Object.entries(p).map((e) => { return `${e[0]}:${e[1]}`; }).join(',')}})">${d}</a>`;
 }
 
 function numToField(num) {
@@ -180,30 +182,44 @@ function problemColumn(data) {
   for (var i in data.keyword) {
     keywords.push(paramLink({ keyword: `'${data.keyword[i]}'` }, data.keyword[i]));
   }
-  var isCA = (local_storage.CAstatus[data.problemid] ? 'ca=true ' : '');
+  var isCA = '';
+  var hidden = '';
+  if (local_storage.CAstatus[data.problemid]) {
+    isCA = ' ca=true';
+    hidden = ' show=true';
+  } else if (!local_storage.ShowNonCAInfo) {
+    hidden = ' show=false';
+  }
   return `<tr class="problem-column" id="prob-${data.problemid}" onclick="caClick(${data.problemid})"${isCA}>`
     + (param.writer_show ? `<td class="pl-writer"><a onclick="stopPropagation(event)" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>` : '')
     + `<td class="pl-name"><p hidden>${data.name}</p>`
     + `<a onclick="stopPropagation(event)" type="${data.type}" type-disp="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
     + `<td class="pl-point">${paramLink({ point_min: data.point, point_max: data.point }, data.point)}</td>`
-    + `<td class="pl-field">${numToField(data.field)}</td>`
-    + `<td class="pl-category">${categories.join(' / ')}</td>`
-    + `<td class="pl-keyword">${keywords.join(' / ')}</td>`
+    + `<td class="pl-field"><span class="pl-hasinfo"${hidden}>${numToField(data.field)}</span></td>`
+    + `<td class="pl-category"><span class="pl-hasinfo"${hidden}>${categories.join(' / ')}</span></td>`
+    + `<td class="pl-keyword"><span class="pl-hasinfo"${hidden}>${keywords.join(' / ')}</span></td>`
     + `</tr>`
 }
 
 function caClick(id) {
   if (local_storage.CAstatus[id]) {
     $(`#prob-${id}`).removeAttr('ca');
+    $(`#prob-${id}`).find('.pl-hasinfo').attr('show', false);
     local_storage.CAstatus[id] = false;
   } else {
     $(`#prob-${id}`).attr('ca', true);
+    $(`#prob-${id}`).find('.pl-hasinfo').attr('show', true);
     local_storage.CAstatus[id] = true;
   }
   saveStorage();
 }
 
 function filter(data) {
+  if (!local_storage.ShowNonCAInfo && !local_storage.CAstatus[data.problemid]) {
+    data.field = 0;
+    data.category = [];
+    data.keyword = [];
+  }
   if (!param.name_not) {
     if (param.name && (data.name.indexOf(param.name) == -1)) return false;
   } else {
@@ -227,7 +243,7 @@ function filter(data) {
 }
 
 
-function applyFilter(param_add = {}) {
+function applyFilter(event, param_add = {}) {
   var newparam = {};
   if ($('#f-name').val()) newparam['name'] = $('#f-name').val();
   if ($('#f-name-not').prop('checked')) newparam['name_not'] = true;
@@ -253,6 +269,10 @@ function applyFilter(param_add = {}) {
   if (param.writer_show) newparam['writer_show'] = true;
   if (param.writer) newparam['writer'] = param.writer;
   for (let key in param_add) { newparam[key] = param_add[key]; }
+
+  local_storage.ShowNonCAInfo = $('#f-non-ca-info').prop('checked');
+  saveStorage();
+
   // page move
   if (newparam.length == 0) window.location.href = 'search';
   else window.location.href = 'search?'

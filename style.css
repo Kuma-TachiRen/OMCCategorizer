@@ -538,3 +538,12 @@ summary {
   font-size: 18px;
   content: attr(max);
 }
+
+.pl-hasinfo[show=false] {
+  font-size: 0;
+}
+
+.pl-hasinfo[show=false]::after {
+  font-size: 12px;
+  content: '-';
+}
