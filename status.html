@@ -24,6 +24,7 @@
             <li class="nav-item"><a href="index">Top</a></li>
             <li class="nav-item"><a href="category">Category</a></li>
             <li class="nav-item"><a href="search">Search</a></li>
+            <li class="nav-item"><a href="status">Status</a></li>
             <li class="nav-v-line"></li>
             <li class="nav-item"><a href="https://onlinemathcontest.com">OMC</a></li>
           </ul>
@@ -32,6 +33,11 @@
     </header>
     <div class="body-contents">
       <h1>Your Status</h1>
+      <input type="text" class="user-id" id="user-id" placeholder="OMC ID">
+      <input type="button" class="user-load" id="user-load" value="Load">
+      <div class="tip">
+        <div class="tip-text">CA状況を取得し，Searchにて手動で設定したものとmergeします</br>データ更新:2021/12/02</div>
+      </div>
       <div style="display: flex;">
         <div class="status-data" id="ca-count">
           <span class="name">CA Count</span>

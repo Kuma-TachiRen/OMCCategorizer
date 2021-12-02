@@ -18,6 +18,8 @@ $(function () {
     if (localStorage.getItem('OMCCategorization')) local_storage = JSON.parse(localStorage.getItem('OMCCategorization'));
   }
   if (!local_storage.CAstatus) local_storage.CAstatus = {};
+  if (local_storage.UserId) $('#user-id').val(local_storage.UserId);
+  else local_storage.UserId = '';
   saveStorage();
 
   // get problem
@@ -95,12 +97,29 @@ $(function () {
         }
       });
 
+      $('#user-load').on('click', userLoad);
       loaded();
     })
     .fail(function () {
       alert("Couldn't get the data of problems");
     });
 });
+
+function userLoad(e) {
+  var user = $('#user-id').val();
+  $.getJSON("./data/ca_list.json", function () { })
+    .done(function (data) {
+      if (data[user]) {
+        local_storage.UserId = user;
+        for (var i in data[user]) {
+          local_storage.CAstatus[data[user][i]] = true;
+        }
+        saveStorage();
+        window.location.href = 'status';
+      }
+    });
+}
+
 
 function isLocalStorageAvailable() {
   var dummy = 'dummy';
