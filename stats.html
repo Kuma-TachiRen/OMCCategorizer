@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="utf-8">
-  <title>OMCCategorizer - Status(beta)</title>
+  <title>OMCCategorizer - Stats</title>
   <link rel="icon" href="./image/icon-32x32.png" sizes="32x32" type="image/png" />
   <link rel="stylesheet" href="style.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.1/chart.min.js"></script>
   <script type="text/javascript" src="js/loader.js"></script>
-  <script type="text/javascript" src="js/status.js"></script>
+  <script type="text/javascript" src="js/stats.js"></script>
 </head>
 
 <body>
@@ -24,7 +24,7 @@
             <li class="nav-item"><a href="index">Top</a></li>
             <li class="nav-item"><a href="category">Category</a></li>
             <li class="nav-item"><a href="search">Search</a></li>
-            <li class="nav-item"><a href="status">Status(β)</a></li>
+            <li class="nav-item"><a href="stats">Stats(β)</a></li>
             <li class="nav-v-line"></li>
             <li class="nav-item"><a href="https://onlinemathcontest.com">OMC</a></li>
           </ul>
@@ -32,23 +32,26 @@
       </div>
     </header>
     <div class="body-contents">
-      <h1>Your Status</h1>
+      <h1>Your Stats</h1>
       <input type="text" class="user-id" id="user-id" placeholder="OMC ID">
       <input type="button" class="user-load" id="user-load" value="Load">
       <div class="tip">
         <div class="tip-text">CA状況を取得し，Searchにて手動で設定したものとmergeします</br>データ更新:2021/12/02</div>
       </div>
+      <input type="button" id="image-download" value="Generate Image & Download">
       <div style="display: flex;">
-        <div class="status-data" id="ca-count">
+        <div class="stats-data" id="ca-count">
           <span class="name">CA Count</span>
-          <span class="value" max="/0"></span>
+          <span class="value" max="0"></span>
         </div>
-        <div class="status-data" id="ca-point-sum">
+        <div class="stats-data" id="ca-point-sum">
           <span class="name">CA Point Sum</span>
-          <span class="value" max="/0"></span>
+          <span class="value" max="0"></span>
         </div>
       </div>
-      <canvas id="status-chart" style="max-width:600px; max-height:450px;"></canvas>
+      <div style="position: relative; width:600px; height:450px">
+        <canvas id="stats-chart" style="position: relative; width:600px; height:450px"></canvas>
+      </div>
     </div>
   </div>
 </body>

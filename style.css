@@ -129,7 +129,7 @@ header {
 
 .body-contents {
   width: 90%;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 h1 {
@@ -402,6 +402,15 @@ summary {
   font-size: 12px;
 }
 
+.pl-hasinfo[show=false] {
+  font-size: 0;
+}
+
+.pl-hasinfo[show=false]::after {
+  font-size: 12px;
+  content: '-';
+}
+
 .pagination {
   list-style: none;
   position: relative;
@@ -516,7 +525,7 @@ summary {
   margin-right: 5px;
 }
 
-.status-data {
+.stats-data {
   width: 160px;
   height: 90px;
   display: flex;
@@ -525,28 +534,20 @@ summary {
   justify-content: center;
 }
 
-.status-data .name {
+.stats-data .name {
   font-size: 16px;
   font-weight: bold;
 }
 
-.status-data .value {
+.stats-data .value {
   font-size: 26px;
 }
 
-.status-data .value::after {
+.stats-data .value::after {
   font-size: 18px;
-  content: attr(max);
+  content: "/" attr(max);
 }
 
-.pl-hasinfo[show=false] {
-  font-size: 0;
-}
-
-.pl-hasinfo[show=false]::after {
-  font-size: 12px;
-  content: '-';
-}
 
 .user-id, .user-load {
   height: 30px;
