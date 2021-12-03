@@ -3,16 +3,23 @@ var storage_available;
 
 const aryMax = function (a, b) { return Math.max(a, b); }
 
+var user = '';
 
 const point_step = 100;
 const point_min = 100;
 const point_max = 800;
+const point_len = 8;
 const point_color_main = ['#888888', '#aa6644', '#44cc44', '#44eeee', '#4444ff', '#eeee44', '#ff8844', '#ff4444'];
 const point_color_sub = ['#dddddd', '#eeddcc', '#ddffdd', '#ddffff', '#ddddff', '#ffffdd', '#ffeedd', '#ffdddd'];
 
 const count_step = 10;
 const num_color_main = ['#ffffff', '#ffffff', '#ffffff', '#008888', '#ffffff', '#888800', '#ffffff', '#ffffff'];
 const num_color_sub = ['#888888', '#aa6644', '#44cc44', '#22bbbb', '#4444ff', '#bbbb22', '#ff8844', '#ff4444'];
+
+var total_count = 0;
+var total_point_sum = 0;
+var total_count_by_point = Array(point_len).fill(0);
+var chart_by_point;
 
 $(function () {
   window.setTimeout(loaded, 5000);
@@ -22,7 +29,6 @@ $(function () {
   if (storage_available) {
     if (localStorage.getItem('OMCCategorization')) local_storage = JSON.parse(localStorage.getItem('OMCCategorization'));
   }
-  if (!local_storage.CAstatus) local_storage.CAstatus = {};
   if (local_storage.UserId) $('#user-id').val(local_storage.UserId);
   else local_storage.UserId = '';
   saveStorage();
@@ -30,54 +36,40 @@ $(function () {
   // get problem
   $.getJSON("./data/problem.json", function () { })
     .done(function (data) {
+
       var point_label = [];
       for (var i = point_min; i <= point_max; i += point_step) {
         if (i == point_min) point_label.push(`~${i}`);
         else if (i == point_max) point_label.push(`${i}~`);
         else point_label.push(`${i}`);
       }
-      var point_size = Math.floor((point_max - point_min) / point_step) + 1;
-      var total_count_by_point = Array(point_size).fill(0);
-      var ca_count_by_point = Array(point_size).fill(0);
-
-      var total_count = 0;
-      var ca_count = 0;
-      var total_point_sum = 0;
-      var ca_point_sum = 0;
 
       for (var i in data) {
         var point = Math.floor((Math.min(Math.max(data[i].point, point_min), point_max) - point_min) / point_step);
         total_count_by_point[point]++;
         total_count++;
         total_point_sum += data[i].point;
-        if (local_storage.CAstatus[data[i].problemid]) {
-          ca_count_by_point[point]++;
-          ca_count++;
-          ca_point_sum += data[i].point;
-        }
       }
-      var non_ca_count_by_point = Array(point_size).fill(0);
-      for (var i = 0; i < point_size; i++) non_ca_count_by_point[i] = total_count_by_point[i] - ca_count_by_point[i];
 
-      $('#ca-count').children('.value').text(ca_count);
+      $('#ca-count').children('.value').text(0);
       $('#ca-count').children('.value').attr('max', total_count);
-      $('#ca-point-sum').children('.value').text(ca_point_sum);
+      $('#ca-point-sum').children('.value').text(0);
       $('#ca-point-sum').children('.value').attr('max', total_point_sum);
 
-      var chart_by_point = new Chart($('#stats-chart'), {
+      chart_by_point = new Chart($('#stats-chart'), {
         type: 'bar',
         data: {
           labels: point_label,
           datasets: [
             {
               label: 'CA',
-              data: ca_count_by_point,
+              data: Array(point_len).fill(0),
               backgroundColor: point_color_main,
               stack: 'stack'
             },
             {
               label: 'Non-CA',
-              data: non_ca_count_by_point,
+              data: total_count_by_point,
               backgroundColor: point_color_sub,
               borderColor: point_color_main,
               borderWidth: 1,
@@ -86,7 +78,6 @@ $(function () {
           ]
         },
         options: {
-          animation: false,
           plugins: {
             legend: {
               display: false
@@ -116,18 +107,18 @@ $(function () {
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, c.width, c.height);
           },
-          afterDatasetsDraw: function (c) {
+          afterDraw: function (c) {
             var ctx = c.ctx;
             ctx.font = 'bold 14px sans-serif';
             ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            ctx.textBaseline = 'middle';;
             c.data.datasets.forEach(function (d, s) {
               var meta = c.getDatasetMeta(s);
               if (!meta.hidden) {
                 meta.data.forEach(function (e, i) {
                   if (d.data[i] == 0) return;
-                  ctx.fillStyle = d.label == 'CA' ? num_color_main[i] : num_color_sub[i];
-                  ctx.fillText(d.data[i].toString(), e.x, e.y + e.height / 2);
+                  ctx.fillStyle = (d.label == 'CA' ? num_color_main[i] : num_color_sub[i]);
+                  ctx.fillText(d.data[i].toString(), e.x, (e.base + e.y) / 2);
                 });
               }
             });
@@ -135,6 +126,7 @@ $(function () {
         }]
       });
       $('#stats-chart').attr('width', 600);
+      userLoad();
 
       $('#user-load').on('click', userLoad);
       $('#image-download').on('click', downloadImage);
@@ -145,8 +137,43 @@ $(function () {
     });
 });
 
+function userLoad() {
+  var user_new = $('#user-id').val();
+  $.getJSON("./data/ca_list.json", function () { })
+    .done(function (ca_data) {
+      if (ca_data[user_new]) {
+        user = user_new;
+        $.getJSON("./data/problem.json", function () { })
+          .done(function (prob_data) {
+            var ca_count = 0;
+            var ca_point_sum = 0;
+            var ca_count_by_point = Array(point_len).fill(0);
+
+            prob_data.forEach(d => {
+              var point = Math.floor((Math.min(Math.max(d.point, point_min), point_max) - point_min) / point_step);
+              if (ca_data[user].includes(d.problemid)) {
+                ca_count_by_point[point]++;
+                ca_count++;
+                ca_point_sum += d.point;
+              }
+            });
+            var non_ca_count_by_point = Array(point_len).fill(0);
+            for (var i = 0; i < point_len; i++) non_ca_count_by_point[i] = total_count_by_point[i] - ca_count_by_point[i];
+
+            chart_by_point.data.datasets[0].data = ca_count_by_point;
+            chart_by_point.data.datasets[1].data = non_ca_count_by_point;
+            chart_by_point.update();
+            $('#ca-count').children('.value').text(ca_count);
+            $('#ca-count').children('.value').attr('max', total_count);
+            $('#ca-point-sum').children('.value').text(ca_point_sum);
+            $('#ca-point-sum').children('.value').attr('max', total_point_sum);
+          });
+      }
+    });
+}
+
 function downloadImage() {
-  if (!local_storage.UserId) return;
+  if (!user) return;
 
   const canvas = document.createElement('canvas');
   canvas.width = 800;
@@ -158,7 +185,7 @@ function downloadImage() {
 
   ctx.fillStyle = '#000000';
   ctx.font = 'bold 30px sans-serif';
-  ctx.fillText(`${local_storage.UserId}'s CA Data`, 20, 40);
+  ctx.fillText(`${user}'s CA Data`, 20, 40);
   ctx.fillRect(10, 50, 780, 1);
 
   ctx.textAlign = 'right';
@@ -231,23 +258,8 @@ function downloadImage() {
 
   let link = document.createElement('a');
   link.href = canvas.toDataURL('chart');
-  link.download = `stats_${local_storage.UserId}.png`;
+  link.download = `stats_${user}.png`;
   link.click();
-}
-
-function userLoad(e) {
-  var user = $('#user-id').val();
-  $.getJSON("./data/ca_list.json", function () { })
-    .done(function (data) {
-      if (data[user]) {
-        local_storage.UserId = user;
-        for (var i in data[user]) {
-          local_storage.CAstatus[data[user][i]] = true;
-        }
-        saveStorage();
-        window.location.href = 'stats';
-      }
-    });
 }
 
 function isLocalStorageAvailable() {

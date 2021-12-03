@@ -107,6 +107,8 @@ $(function () {
   if (!local_storage.CAstatus) local_storage.CAstatus = {};
   if (!local_storage.ShowNonCAInfo) local_storage.ShowNonCAInfo = false;
   else $('#f-non-ca-info').prop('checked', true);
+  if (!local_storage.UserId) local_storage.UserId = '';
+  else $('#f-user-id').val(local_storage.UserId);
   saveStorage();
 
   // get category
@@ -150,6 +152,7 @@ $(function () {
       alert("Couldn't get the data of categories");
     });
 
+  $('#f-user-load').on('click', userLoad);
   $('#f-apply').on('click', applyFilter);
   $('#f-reset').on('click', function () {
     window.location.href = 'search';
@@ -291,6 +294,23 @@ function getParam(name, url) {
   if (!results) return null;
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function userLoad() {
+  var user = $('#f-user-id').val();
+  if (!user) return;
+  $.getJSON("./data/ca_list.json", function () { })
+    .done(function (data) {
+      if (data[user]) {
+        local_storage.UserId = user;
+        local_storage.CAstatus = {};
+        data[user].forEach(probid => {
+          local_storage.CAstatus[probid] = true;
+        });
+        saveStorage();
+        window.location.href = window.location;
+      }
+    });
 }
 
 function isLocalStorageAvailable() {
