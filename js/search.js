@@ -134,7 +134,7 @@ $(function () {
             probList = new List('problem-list', plOptions);
             probList.sort('pl-name', { order: 'asc' });
           }
-          if ($('#user-id').val() && Date.now() / 1000 - local_storage.CALastUpdate > 3600 * 12) userLoad();
+          if ($('#user-id').val() && (Date.now() / 1000 - local_storage.CALastUpdate > 3600 * 12)) userLoad();
           $('#user-load').on('click', userLoad);
           loaded();
         })
@@ -294,7 +294,7 @@ async function userLoad() {
   var user = $('#user-id').val();
   const data = await getUserCA(user);
   if (data.ca.length) {
-    local_storage.CALastUpdate = data.lastupdate;
+    local_storage.CALastUpdate = Math.floor(Date.now()/1000);
     local_storage.UserId = user;
     local_storage.CAstatus = {};
     data.ca.forEach(id => {
