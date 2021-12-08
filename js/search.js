@@ -21,7 +21,6 @@ var typelist = {
 }
 
 var local_storage = {};
-var storage_available;
 
 $(function () {
   window.setTimeout(loaded, 5000);
@@ -100,16 +99,9 @@ $(function () {
   }
 
   // get localStorage
-  storage_available = isLocalStorageAvailable();
-  if (storage_available) {
-    if (localStorage.getItem('OMCCategorization')) local_storage = JSON.parse(localStorage.getItem('OMCCategorization'));
-  }
-  if (!local_storage.CAstatus) local_storage.CAstatus = {};
-  if (!local_storage.ShowNonCAInfo) local_storage.ShowNonCAInfo = false;
-  else $('#f-non-ca-info').prop('checked', true);
-  if (!local_storage.UserId) local_storage.UserId = '';
-  else $('#f-user-id').val(local_storage.UserId);
-  saveStorage();
+  local_storage = getStorage();
+  $('#f-non-ca-info').prop('checked', true);
+  $('#user-id').val(local_storage.UserId);
 
   // get category
   $.getJSON("./data/category.json", function () { })
@@ -142,6 +134,8 @@ $(function () {
             probList = new List('problem-list', plOptions);
             probList.sort('pl-name', { order: 'asc' });
           }
+          if ($('#user-id').val() && Date.now() / 1000 - local_storage.CALastUpdate > 3600 * 12) userLoad();
+          $('#user-load').on('click', userLoad);
           loaded();
         })
         .fail(function () {
@@ -152,7 +146,6 @@ $(function () {
       alert("Couldn't get the data of categories");
     });
 
-  $('#f-user-load').on('click', userLoad);
   $('#f-apply').on('click', applyFilter);
   $('#f-reset').on('click', function () {
     window.location.href = 'search';
@@ -214,7 +207,7 @@ function caClick(id) {
     $(`#prob-${id}`).find('.pl-hasinfo').attr('show', true);
     local_storage.CAstatus[id] = true;
   }
-  saveStorage();
+  saveStorage(local_storage);
 }
 
 function filter(data) {
@@ -274,7 +267,7 @@ function applyFilter(event, param_add = {}) {
   for (let key in param_add) { newparam[key] = param_add[key]; }
 
   local_storage.ShowNonCAInfo = $('#f-non-ca-info').prop('checked');
-  saveStorage();
+  saveStorage(local_storage);
 
   // page move
   if (newparam.length == 0) window.location.href = 'search';
@@ -298,33 +291,19 @@ function getParam(name, url) {
 
 async function userLoad() {
   $('#loading-mark').show();
-  var user = $('#f-user-id').val();
+  var user = $('#user-id').val();
   const data = await getUserCA(user);
   if (data.ca.length) {
+    local_storage.CALastUpdate = data.lastupdate;
     local_storage.UserId = user;
     local_storage.CAstatus = {};
-    data.ca.forEach(probid => {
-      local_storage.CAstatus[probid] = true;
+    data.ca.forEach(id => {
+      var elm = probList.items.find(c => c.elm.id == `prob-${id}`).elm;
+      $(elm).attr('ca', true);
+      $(elm).find('.pl-hasinfo').attr('show', true);
+      local_storage.CAstatus[id] = true;
     });
-    saveStorage();
-    window.location.href = window.location;
+    saveStorage(local_storage);
   }
   $('#loading-mark').hide();
-}
-
-function isLocalStorageAvailable() {
-  var dummy = 'dummy';
-  try {
-    localStorage.setItem(dummy, dummy);
-    localStorage.removeItem(dummy);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function saveStorage() {
-  if (storage_available) {
-    localStorage.setItem('OMCCategorization', JSON.stringify(local_storage));
-  }
 }

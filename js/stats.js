@@ -1,5 +1,4 @@
 var local_storage = {};
-var storage_available;
 
 const aryMax = function (a, b) { return Math.max(a, b); }
 
@@ -25,13 +24,8 @@ $(function () {
   window.setTimeout(loaded, 5000);
 
   // get localStorage
-  storage_available = isLocalStorageAvailable();
-  if (storage_available) {
-    if (localStorage.getItem('OMCCategorization')) local_storage = JSON.parse(localStorage.getItem('OMCCategorization'));
-  }
-  if (local_storage.UserId) $('#user-id').val(local_storage.UserId);
-  else local_storage.UserId = '';
-  saveStorage();
+  local_storage = getStorage();
+  $('#user-id').val(local_storage.UserId);
 
   // get problem
   $.getJSON("./data/problem.json", function () { })
@@ -129,7 +123,7 @@ $(function () {
         }]
       });
       $('#stats-chart').attr('width', 600);
-      userLoad();
+      localLoad();
 
       $('#user-load').on('click', userLoad);
       $('#image-download').on('click', downloadImage);
@@ -139,6 +133,40 @@ $(function () {
       alert("Couldn't get the data of problems");
     });
 });
+
+function localLoad() {
+  $('#loading-mark').show();
+  user = local_storage.UserId;
+  const data = local_storage.CAStatus;
+  const date = new Date(local_storage.CALastUpdate * 1000);
+  $('#data-update-date').text(`データ更新：${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
+  $.getJSON("./data/problem.json", function () { })
+    .done(function (prob_data) {
+      var ca_count = 0;
+      var ca_point_sum = 0;
+      var ca_count_by_point = Array(point_len).fill(0);
+
+      prob_data.forEach(d => {
+        var point = Math.floor((Math.min(Math.max(d.point, point_min), point_max) - point_min) / point_step);
+        if (local_storage.CAstatus[d.problemid]) {
+          ca_count_by_point[point]++;
+          ca_count++;
+          ca_point_sum += d.point;
+        }
+      });
+      var non_ca_count_by_point = Array(point_len).fill(0);
+      for (var i = 0; i < point_len; i++) non_ca_count_by_point[i] = total_count_by_point[i] - ca_count_by_point[i];
+
+      chart_by_point.data.datasets[0].data = ca_count_by_point;
+      chart_by_point.data.datasets[1].data = non_ca_count_by_point;
+      chart_by_point.update();
+      $('#ca-count').children('.value').text(ca_count);
+      $('#ca-count').children('.value').attr('max', total_count);
+      $('#ca-point-sum').children('.value').text(ca_point_sum);
+      $('#ca-point-sum').children('.value').attr('max', total_point_sum);
+    });
+  $('#loading-mark').hide();
+}
 
 async function userLoad() {
   $('#loading-mark').show();
@@ -262,21 +290,4 @@ function downloadImage() {
   link.href = canvas.toDataURL('chart');
   link.download = `stats_${user}.png`;
   link.click();
-}
-
-function isLocalStorageAvailable() {
-  var dummy = 'dummy';
-  try {
-    localStorage.setItem(dummy, dummy);
-    localStorage.removeItem(dummy);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function saveStorage() {
-  if (storage_available) {
-    localStorage.setItem('OMCCategorization', JSON.stringify(local_storage));
-  }
 }

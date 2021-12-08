@@ -9,6 +9,7 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src="js/loader.js"></script>
   <script type="text/javascript" src="js/api.js"></script>
+  <script type="text/javascript" src="js/storage.js"></script>
   <script type="text/javascript" src="js/search.js"></script>
 </head>
 
@@ -34,6 +35,9 @@
     </header>
     <div class="body-contents">
       <h1>Search</h1>
+      <input type="text" class="user-id"  id="user-id" placeholder="OMC ID">
+      <input type="button" class="user-load"  id="user-load" value="ID設定">
+      <div class="loading-mark-mini" id="loading-mark" style="display: none;"></div>
       <details class="setting" id="setting">
         <summary>フィルタ/設定</summary>
         <form class="form-filter">
@@ -136,10 +140,6 @@
                 <div class="chkbox"><input type="checkbox" id="f-non-ca-info" name="f-non-ca-info"> <label
                     for="f-non-ca-info">未CAの問題情報も表示</label>
                 </div>
-                <div class="form-v-line"></div>
-                <input type="text" id="f-user-id" name="f-user-id" placeholder="OMC ID">
-                <input type="button" id="f-user-load" name="f-user-load" value="CA状況取得">
-                <div class="loading-mark-mini" id="loading-mark" style="display: none;"></div>
               </td>
             </tr>
           </table>
