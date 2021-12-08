@@ -296,7 +296,7 @@ function getParam(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function userLoad() {
+async function userLoad() {
   $('#loading-mark').show();
   var user = $('#f-user-id').val();
   const data = await getUserCA(user);
