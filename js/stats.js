@@ -79,6 +79,9 @@ $(function () {
         },
         options: {
           plugins: {
+            tooltip: {
+              enabled: false
+            },
             legend: {
               display: false
             }
@@ -137,39 +140,38 @@ $(function () {
     });
 });
 
-function userLoad() {
-  var user_new = $('#user-id').val();
-  $.getJSON("./data/ca_list.json", function () { })
-    .done(function (ca_data) {
-      if (ca_data[user_new]) {
-        user = user_new;
-        $.getJSON("./data/problem.json", function () { })
-          .done(function (prob_data) {
-            var ca_count = 0;
-            var ca_point_sum = 0;
-            var ca_count_by_point = Array(point_len).fill(0);
+async function userLoad() {
+  $('#loading-mark').show();
+  user = $('#user-id').val();
+  const data = await getUserCA(user);
+  const date = new Date(data.lastupdate * 1000);
+  $('#data-update-date').text(`データ更新：${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
+  $.getJSON("./data/problem.json", function () { })
+    .done(function (prob_data) {
+      var ca_count = 0;
+      var ca_point_sum = 0;
+      var ca_count_by_point = Array(point_len).fill(0);
 
-            prob_data.forEach(d => {
-              var point = Math.floor((Math.min(Math.max(d.point, point_min), point_max) - point_min) / point_step);
-              if (ca_data[user].includes(d.problemid)) {
-                ca_count_by_point[point]++;
-                ca_count++;
-                ca_point_sum += d.point;
-              }
-            });
-            var non_ca_count_by_point = Array(point_len).fill(0);
-            for (var i = 0; i < point_len; i++) non_ca_count_by_point[i] = total_count_by_point[i] - ca_count_by_point[i];
+      prob_data.forEach(d => {
+        var point = Math.floor((Math.min(Math.max(d.point, point_min), point_max) - point_min) / point_step);
+        if (data.ca.includes(d.problemid)) {
+          ca_count_by_point[point]++;
+          ca_count++;
+          ca_point_sum += d.point;
+        }
+      });
+      var non_ca_count_by_point = Array(point_len).fill(0);
+      for (var i = 0; i < point_len; i++) non_ca_count_by_point[i] = total_count_by_point[i] - ca_count_by_point[i];
 
-            chart_by_point.data.datasets[0].data = ca_count_by_point;
-            chart_by_point.data.datasets[1].data = non_ca_count_by_point;
-            chart_by_point.update();
-            $('#ca-count').children('.value').text(ca_count);
-            $('#ca-count').children('.value').attr('max', total_count);
-            $('#ca-point-sum').children('.value').text(ca_point_sum);
-            $('#ca-point-sum').children('.value').attr('max', total_point_sum);
-          });
-      }
+      chart_by_point.data.datasets[0].data = ca_count_by_point;
+      chart_by_point.data.datasets[1].data = non_ca_count_by_point;
+      chart_by_point.update();
+      $('#ca-count').children('.value').text(ca_count);
+      $('#ca-count').children('.value').attr('max', total_count);
+      $('#ca-point-sum').children('.value').text(ca_point_sum);
+      $('#ca-point-sum').children('.value').attr('max', total_point_sum);
     });
+  $('#loading-mark').hide();
 }
 
 function downloadImage() {

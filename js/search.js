@@ -297,20 +297,19 @@ function getParam(name, url) {
 }
 
 function userLoad() {
+  $('#loading-mark').show();
   var user = $('#f-user-id').val();
-  if (!user) return;
-  $.getJSON("./data/ca_list.json", function () { })
-    .done(function (data) {
-      if (data[user]) {
-        local_storage.UserId = user;
-        local_storage.CAstatus = {};
-        data[user].forEach(probid => {
-          local_storage.CAstatus[probid] = true;
-        });
-        saveStorage();
-        window.location.href = window.location;
-      }
+  const data = await getUserCA(user);
+  if (data.ca.length) {
+    local_storage.UserId = user;
+    local_storage.CAstatus = {};
+    data.ca.forEach(probid => {
+      local_storage.CAstatus[probid] = true;
     });
+    saveStorage();
+    window.location.href = window.location;
+  }
+  $('#loading-mark').hide();
 }
 
 function isLocalStorageAvailable() {
