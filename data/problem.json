@@ -256,7 +256,7 @@
 {"type":"b","contestid":"omc041","problemid":1580,"name":"OMC041(C)","point":300,"writer":"AT_0105","field":2,"category":["count_up"],"keyword":[]},
 {"type":"b","contestid":"omc041","problemid":1299,"name":"OMC041(D)","point":400,"writer":"mathlize_yasuda","field":1,"category":["equation"],"keyword":[]},
 {"type":"n","contestid":"omc042","problemid":1699,"name":"OMC042(A)","point":100,"writer":"shoko_math","field":2,"category":["count_up"],"keyword":[]},
-{"type":"n","contestid":"omc042","problemid":1700,"name":"OMC042(B)","point":200,"writer":"shoko_math","field":8,"category":["digit_sum"],"keyword":[]},
+{"type":"n","contestid":"omc042","problemid":1700,"name":"OMC042(B)","point":200,"writer":"shoko_math","field":8,"category":["sum"],"keyword":[]},
 {"type":"n","contestid":"omc042","problemid":1789,"name":"OMC042(C)","point":200,"writer":"shoko_math","field":4,"category":["polygon","circle"],"keyword":[]},
 {"type":"n","contestid":"omc042","problemid":1701,"name":"OMC042(D)","point":400,"writer":"shoko_math","field":8,"category":["divisor"],"keyword":[]},
 {"type":"n","contestid":"omc042","problemid":1790,"name":"OMC042(E)","point":500,"writer":"shoko_math","field":9,"category":["modulo","prime"],"keyword":["Fermatの小定理"]},
@@ -264,7 +264,7 @@
 {"type":"b","contestid":"omc043","problemid":1264,"name":"OMC043(A)","point":100,"writer":"tortoisebekkou","field":4,"category":["polygon","min_max"],"keyword":[]},
 {"type":"b","contestid":"omc043","problemid":197,"name":"OMC043(B)","point":200,"writer":"NeoInstagramer","field":2,"category":["prob_stat"],"keyword":[]},
 {"type":"b","contestid":"omc043","problemid":1705,"name":"OMC043(C)","point":300,"writer":"shakayami","field":1,"category":["calculus"],"keyword":[]},
-{"type":"b","contestid":"omc043","problemid":218,"name":"OMC043(D)","point":400,"writer":"torii","field":8,"category":["digit_sum"],"keyword":[]},
+{"type":"b","contestid":"omc043","problemid":218,"name":"OMC043(D)","point":400,"writer":"torii","field":8,"category":["sum"],"keyword":[]},
 {"type":"e","contestid":"omc044","problemid":1,"name":"OMC044(A)","point":200,"writer":"maple116","field":2,"category":["adhoc"],"keyword":["Ramseyの定理"]},
 {"type":"e","contestid":"omc044","problemid":1895,"name":"OMC044(B)","point":300,"writer":"dama_math","field":4,"category":["polygon"],"keyword":[]},
 {"type":"e","contestid":"omc044","problemid":1983,"name":"OMC044(C)","point":400,"writer":"dama_math","field":8,"category":["modulo","prime"],"keyword":["Fermatの小定理","Eulerの定理"]},
@@ -362,5 +362,11 @@
 {"type":"e","contestid":"omc057","problemid":1314,"name":"OMC057(C)","point":500,"writer":"shakayami","field":10,"category":["count_up"],"keyword":[]},
 {"type":"e","contestid":"omc057","problemid":2040,"name":"OMC057(D)","point":500,"writer":"shakayami","field":5,"category":["equation","polygon"],"keyword":[]},
 {"type":"e","contestid":"omc057","problemid":1709,"name":"OMC057(E)","point":600,"writer":"shakayami","field":8,"category":["sum"],"keyword":[]},
-{"type":"e","contestid":"omc057","problemid":2193,"name":"OMC057(F)","point":700,"writer":"shakayami","field":2,"category":["count_up","p_adic_val"],"keyword":[]}
+{"type":"e","contestid":"omc057","problemid":2193,"name":"OMC057(F)","point":700,"writer":"shakayami","field":2,"category":["count_up","p_adic_val"],"keyword":[]},
+{"type":"b","contestid":"omc058","problemid":2245,"name":"OMC058(A)","point":100,"writer":"taso2nd","field":2,"category":["count_up"],"keyword":[]},
+{"type":"b","contestid":"omc058","problemid":1999,"name":"OMC058(B)","point":200,"writer":"integral_1","field":8,"category":["sum"],"keyword":[]},
+{"type":"b","contestid":"omc058","problemid":2230,"name":"OMC058(C)","point":300,"writer":"taso2nd","field":1,"category":["equation"],"keyword":[]},
+{"type":"b","contestid":"omc058","problemid":1605,"name":"OMC058(D)","point":300,"writer":"kinmokusei","field":8,"category":["sum"],"keyword":[]},
+{"type":"b","contestid":"omc058","problemid":1777,"name":"OMC058(E)","point":300,"writer":"t0b0","field":4,"category":["solid_geom"],"keyword":[]},
+{"type":"b","contestid":"omc058","problemid":1656,"name":"OMC058(F)","point":400,"writer":"2_3_5_7","field":2,"category":["count_up"],"keyword":[]}
 ]

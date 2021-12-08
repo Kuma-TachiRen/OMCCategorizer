@@ -12,7 +12,6 @@
 {"id":"circle","display":"円","description":"円に関する問題"},
 {"id":"solid_geom","display":"空間幾何","description":"空間幾何の問題"},
 {"id":"n_equation","display":"整数方程式","description":"整数方程式の問題"},
-{"id":"digit_sum","display":"各桁の和","description":"各桁の和に関する問題"},
 {"id":"divisor","display":"約数・倍数","description":"約数に関する問題"},
 {"id":"num_seq","display":"数列","description":"数列の問題"},
 {"id":"modulo","display":"剰余","description":"剰余に関する問題"},
