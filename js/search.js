@@ -100,8 +100,11 @@ $(function () {
 
   // get localStorage
   local_storage = getStorage();
-  $('#f-non-ca-info').prop('checked', true);
   $('#user-id').val(local_storage.UserId);
+  $('#f-non-ca-info').prop('checked', local_storage.ShowNonCAInfo);
+  if (!local_storage.ShowNonCAInfo) {
+    $('#problem-list').attr('hide-non-ca-info', true);
+  }
 
   // get category
   $.getJSON("./data/category.json", function () { })
@@ -179,21 +182,17 @@ function problemColumn(data) {
     keywords.push(paramLink({ keyword: `'${data.keyword[i]}'` }, data.keyword[i]));
   }
   var isCA = '';
-  var hidden = '';
   if (local_storage.CAstatus[data.problemid]) {
     isCA = ' ca=true';
-    hidden = ' show=true';
-  } else if (!local_storage.ShowNonCAInfo) {
-    hidden = ' show=false';
   }
   return `<tr class="problem-column" id="prob-${data.problemid}" onclick="caClick(${data.problemid})"${isCA}>`
     + (param.writer_show ? `<td class="pl-writer"><a onclick="stopPropagation(event)" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>` : '')
     + `<td class="pl-name"><p hidden>${data.name}</p>`
     + `<a onclick="stopPropagation(event)" type="${data.type}" type-disp="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
     + `<td class="pl-point">${paramLink({ point_min: data.point, point_max: data.point }, data.point)}</td>`
-    + `<td class="pl-field"><span class="pl-hasinfo"${hidden}>${numToField(data.field)}</span></td>`
-    + `<td class="pl-category"><span class="pl-hasinfo"${hidden}>${categories.join(' / ')}</span></td>`
-    + `<td class="pl-keyword"><span class="pl-hasinfo"${hidden}>${keywords.join(' / ')}</span></td>`
+    + `<td class="pl-field"><span class="pl-hasinfo">${numToField(data.field)}</span></td>`
+    + `<td class="pl-category"><span class="pl-hasinfo">${categories.join(' / ')}</span></td>`
+    + `<td class="pl-keyword"><span class="pl-hasinfo">${keywords.join(' / ')}</span></td>`
     + `</tr>`
 }
 
@@ -294,7 +293,7 @@ async function userLoad() {
   var user = $('#user-id').val();
   const data = await getUserCA(user);
   if (data.ca.length) {
-    local_storage.CALastUpdate = Math.floor(Date.now()/1000);
+    local_storage.CALastUpdate = Math.floor(Date.now() / 1000);
     local_storage.UserId = user;
     local_storage.CAstatus = {};
     data.ca.forEach(id => {

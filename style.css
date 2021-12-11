@@ -418,11 +418,11 @@ summary {
   font-size: 12px;
 }
 
-.pl-hasinfo[show=false] {
+#problem-list[hide-non-ca-info=true] .problem-column:not([ca=true]) .pl-hasinfo {
   font-size: 0;
 }
 
-.pl-hasinfo[show=false]::after {
+#problem-list[hide-non-ca-info=true] .problem-column:not([ca=true]) .pl-hasinfo::after {
   font-size: 12px;
   content: '-';
 }
