@@ -155,12 +155,8 @@ $(function () {
   });
 });
 
-function stopPropagation(e) {
-  e.stopPropagation();
-}
-
 function paramLink(p, d) {
-  return `<a onclick="stopPropagation(event);applyFilter({},{${Object.entries(p).map((e) => { return `${e[0]}:${e[1]}`; }).join(',')}})">${d}</a>`;
+  return `<a onclick="applyFilter({},{${Object.entries(p).map((e) => { return `${e[0]}:${e[1]}`; }).join(',')}})">${d}</a>`;
 }
 
 function numToField(num) {
@@ -185,28 +181,15 @@ function problemColumn(data) {
   if (local_storage.CAstatus[data.problemid]) {
     isCA = ' ca=true';
   }
-  return `<tr class="problem-column" id="prob-${data.problemid}" onclick="caClick(${data.problemid})"${isCA}>`
-    + (param.writer_show ? `<td class="pl-writer"><a onclick="stopPropagation(event)" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>` : '')
+  return `<tr class="problem-column" id="prob-${data.problemid}"${isCA}>`
+    + (param.writer_show ? `<td class="pl-writer"><a href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>` : '')
     + `<td class="pl-name"><p hidden>${data.name}</p>`
-    + `<a onclick="stopPropagation(event)" type="${data.type}" type-disp="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
+    + `<a type="${data.type}" type-disp="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
     + `<td class="pl-point">${paramLink({ point_min: data.point, point_max: data.point }, data.point)}</td>`
     + `<td class="pl-field"><span class="pl-hasinfo">${numToField(data.field)}</span></td>`
     + `<td class="pl-category"><span class="pl-hasinfo">${categories.join(' / ')}</span></td>`
     + `<td class="pl-keyword"><span class="pl-hasinfo">${keywords.join(' / ')}</span></td>`
     + `</tr>`
-}
-
-function caClick(id) {
-  if (local_storage.CAstatus[id]) {
-    $(`#prob-${id}`).removeAttr('ca');
-    $(`#prob-${id}`).find('.pl-hasinfo').attr('show', false);
-    local_storage.CAstatus[id] = false;
-  } else {
-    $(`#prob-${id}`).attr('ca', true);
-    $(`#prob-${id}`).find('.pl-hasinfo').attr('show', true);
-    local_storage.CAstatus[id] = true;
-  }
-  saveStorage(local_storage);
 }
 
 function filter(data) {
@@ -236,7 +219,6 @@ function filter(data) {
   if (param.writer_show && data.writer.indexOf(param.writer) == -1) return false;
   return true;
 }
-
 
 function applyFilter(event, param_add = {}) {
   var newparam = {};
