@@ -24,7 +24,7 @@ var local_storage = {};
 
 $(function () {
   window.setTimeout(loaded, 5000);
-  // get URL parameter
+  // Get URL parameter
   var param_changed = false;
   function chkboxCheck(paramid, htmlid) {
     param[paramid] = getParam(paramid) == 'true';
@@ -33,14 +33,16 @@ $(function () {
       param_changed = true;
     }
   }
+  // Problem name
   param.name = getParam('name');
   if (param.name) {
     $('#f-name').val(param.name);
     param_changed = true;
   } else {
-    param.name = "";
+    param.name = '';
   }
   chkboxCheck('name_not', 'f-name-not');
+  // Field
   param.field = getParam('field');
   if (param.field) {
     var num = parseInt(param.field);
@@ -53,6 +55,7 @@ $(function () {
     param.field = 0;
   }
   chkboxCheck('field_exact', 'f-field-exact')
+  // Point
   param.point_min = parseInt(getParam('point_min'));
   if (Number.isInteger(param.point_min)) {
     $('#f-point-min').val(param.point_min);
@@ -66,6 +69,7 @@ $(function () {
     param.point_max = 1000;
   }
   if (!(param.point_min == 0 && param.point_max == 1000)) param_changed = true;
+  // Category/Keyword
   param.category = getParam('category');
   if (param.category) param_changed = true;
   param.keyword = getParam('keyword');
@@ -75,9 +79,10 @@ $(function () {
   } else {
     param.keyword = '';
   }
+  // CA
   chkboxCheck('ca', 'f-ca');
   chkboxCheck('ca_not', 'f-ca-not');
-
+  // Contest type
   param.type = {};
   param.type_any = false;
   for (let key in typelist) {
@@ -88,6 +93,15 @@ $(function () {
       param.type_any = true;
     }
   };
+  // Writer
+  chkboxCheck('writer_show', 'f-writer-show');
+  param.writer = getParam('writer');
+  if (param.writer) {
+    $('#f-writer').val(param.writer);
+    param_changed = true;
+  } else {
+    param.writer = '';
+  }
 
   if (param_changed) $('#setting').attr('open', true);
 
@@ -98,7 +112,7 @@ $(function () {
     if (!param.writer) param.writer = '';
   }
 
-  // get localStorage
+  // Get local storage
   local_storage = getStorage();
   $('#user-id').val(local_storage.UserId);
   $('#f-non-ca-info').prop('checked', local_storage.ShowNonCAInfo);
@@ -106,7 +120,7 @@ $(function () {
     $('#problem-list').attr('hide-non-ca-info', true);
   }
 
-  // get category
+  // Get category
   $.getJSON("./data/category.json", function () { })
     .done(function (data) {
       for (var i in data) {
@@ -117,7 +131,7 @@ $(function () {
         }
       }
 
-      // get problem
+      // Get problem
       $.getJSON("./data/problem.json", function () { })
         .done(function (data) {
           var count_match = 0;
@@ -243,8 +257,8 @@ function applyFilter(event, param_add = {}) {
   for (let key in typelist) {
     if ($(`#f-type-${key}`).prop('checked')) newparam[`type_${key}`] = true;
   };
-  if (param.writer_show) newparam['writer_show'] = true;
-  if (param.writer) newparam['writer'] = param.writer;
+  if ($('#f-writer-show').prop('checked')) newparam['writer_show'] = true;
+  if ($('#f-writer').val()) newparam['writer'] = $('#f-writer').val();
   for (let key in param_add) { newparam[key] = param_add[key]; }
 
   local_storage.ShowNonCAInfo = $('#f-non-ca-info').prop('checked');
