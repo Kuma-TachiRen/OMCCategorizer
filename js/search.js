@@ -293,10 +293,12 @@ async function userLoad() {
     local_storage.UserId = user;
     local_storage.CAstatus = {};
     data.ca.forEach(id => {
-      var elm = probList.items.find(c => c.elm.id == `prob-${id}`).elm;
-      $(elm).attr('ca', true);
-      $(elm).find('.pl-hasinfo').attr('show', true);
       local_storage.CAstatus[id] = true;
+      var col = probList.items.find(c => c.elm.id == `prob-${id}`);
+      if (col) {
+        $(col.elm).attr('ca', true);
+        $(col.elm).find('.pl-hasinfo').attr('show', true);
+      }
     });
     saveStorage(local_storage);
   }
