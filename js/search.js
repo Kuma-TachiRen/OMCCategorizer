@@ -119,6 +119,8 @@ $(function () {
   if (!local_storage.ShowNonCAInfo) {
     $('#problem-list').attr('hide-non-ca-info', true);
   }
+  $('#data-update-date').text(`(データ更新：${updateDateStr(local_storage.CALastUpdate)})`);
+
 
   // Get category
   $.getJSON("./data/category.json", function () { })
@@ -151,7 +153,7 @@ $(function () {
             probList = new List('problem-list', plOptions);
             probList.sort('pl-name', { order: 'asc' });
           }
-          if ($('#user-id').val() && (Date.now() / 1000 - local_storage.CALastUpdate > 3600 * 12)) userLoad();
+          if ($('#user-id').val() && isDataOld(local_storage.CALastLoad)) userLoad();
           $('#user-load').on('click', userLoad);
           loaded();
         })
@@ -288,8 +290,10 @@ async function userLoad() {
   $('#loading-mark').show();
   var user = $('#user-id').val();
   const data = await getUserCA(user);
+  $('#data-update-date').text(`(データ更新：${updateDateStr(data.lastupdate)})`);
   if (data.ca.length) {
-    local_storage.CALastUpdate = Math.floor(Date.now() / 1000);
+    local_storage.CALastLoad = Math.floor(Date.now() / 1000);
+    local_storage.CALastUpdate = data.lastupdate;
     local_storage.UserId = user;
     local_storage.CAstatus = {};
     data.ca.forEach(id => {

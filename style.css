@@ -573,3 +573,7 @@ summary {
 .user-id {
   width: 200px;
 }
+
+.data-update-date {
+  font-size: 12px;
+}

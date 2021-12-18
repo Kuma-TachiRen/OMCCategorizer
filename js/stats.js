@@ -134,12 +134,21 @@ $(function () {
     });
 });
 
-function localLoad() {
+async function localLoad() {
   $('#loading-mark').show();
   user = local_storage.UserId;
-  const data = local_storage.CAStatus;
-  const date = new Date(local_storage.CALastUpdate * 1000);
-  $('#data-update-date').text(`データ更新：${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
+  if (isDataOld(local_storage.CALastLoad)) {
+    const data = await getUserCA(user);
+    if (data.ca.length) {
+      local_storage.CALastLoad = Math.floor(Date.now() / 1000);
+      local_storage.CALastUpdate = data.lastupdate;
+      local_storage.UserId = user;
+      local_storage.CAstatus = {};
+      data.ca.forEach(id => { local_storage.CAstatus[id] = true; });
+      saveStorage(local_storage);
+    }
+  }
+  $('#data-update-date').text(`(データ更新：${updateDateStr(local_storage.CALastUpdate)})`);
   $.getJSON("./data/problem.json", function () { })
     .done(function (prob_data) {
       var ca_count = 0;
@@ -172,8 +181,7 @@ async function userLoad() {
   $('#loading-mark').show();
   user = $('#user-id').val();
   const data = await getUserCA(user);
-  const date = new Date(data.lastupdate * 1000);
-  $('#data-update-date').text(`データ更新：${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
+  $('#data-update-date').text(`(データ更新：${updateDateStr(data.lastupdate)})`);
   $.getJSON("./data/problem.json", function () { })
     .done(function (prob_data) {
       var ca_count = 0;
