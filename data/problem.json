@@ -374,5 +374,11 @@
 {"type":"n","contestid":"omc059","problemid":1488,"name":"OMC059(C)","point":300,"writer":"natu_math","field":8,"category":["divisor","n_equation"],"keyword":[]},
 {"type":"n","contestid":"omc059","problemid":250,"name":"OMC059(D)","point":400,"writer":"natu_math","field":4,"category":["circle"],"keyword":["通過領域"]},
 {"type":"n","contestid":"omc059","problemid":264,"name":"OMC059(E)","point":500,"writer":"natu_math","field":1,"category":["min_max"],"keyword":[]},
-{"type":"n","contestid":"omc059","problemid":1467,"name":"OMC059(F)","point":600,"writer":"natu_math","field":4,"category":["circle"],"keyword":[]}
+{"type":"n","contestid":"omc059","problemid":1467,"name":"OMC059(F)","point":600,"writer":"natu_math","field":4,"category":["circle"],"keyword":[]},
+{"type":"e","contestid":"omc060","problemid":243,"name":"OMC060(A)","point":200,"writer":"jun2nosimobe","field":1,"category":["min_max"],"keyword":[]},
+{"type":"e","contestid":"omc060","problemid":244,"name":"OMC060(B)","point":400,"writer":"jun2nosimobe","field":2,"category":["count_up"],"keyword":[]},
+{"type":"e","contestid":"omc060","problemid":274,"name":"OMC060(C)","point":400,"writer":"jun2nosimobe","field":4,"category":["polygon","circle"],"keyword":[]},
+{"type":"e","contestid":"omc060","problemid":273,"name":"OMC060(D)","point":600,"writer":"jun2nosimobe","field":2,"category":["count_up"],"keyword":[]},
+{"type":"e","contestid":"omc060","problemid":1484,"name":"OMC060(E)","point":700,"writer":"HighSpeed","field":1,"category":["equation","num_seq"],"keyword":[]},
+{"type":"e","contestid":"omc060","problemid":289,"name":"OMC060(F)","point":1000,"writer":"jun2nosimobe","field":8,"category":["modulo"],"keyword":[]}
 ]
