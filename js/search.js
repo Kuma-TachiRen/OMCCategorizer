@@ -226,7 +226,7 @@ function filter(data) {
       if ((data.field & param.field) == 0) return false;
     }
   }
-  if (param.point_min && param.point_max && ((data.point < param.point_min) || (data.point > param.point_max))) return false;
+  if (data.point < param.point_min || data.point > param.point_max) return false;
   if (param.category && !data.category.includes(param.category)) return false;
   if (param.keyword && !data.keyword.includes(param.keyword)) return false;
   if (param.ca && !param.ca_not && !local_storage.CAstatus[data.problemid]) return false;
