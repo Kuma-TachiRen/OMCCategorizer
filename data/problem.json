@@ -386,5 +386,11 @@
 {"type":"b","contestid":"omc061","problemid":2439,"name":"OMC061(C)","point":200,"writer":"locker_kun","field":1,"category":["sum"],"keyword":[]},
 {"type":"b","contestid":"omc061","problemid":2490,"name":"OMC061(D)","point":300,"writer":"locker_kun","field":2,"category":["count_up"],"keyword":[]},
 {"type":"b","contestid":"omc061","problemid":2190,"name":"OMC061(E)","point":300,"writer":"locker_kun","field":2,"category":["count_up"],"keyword":[]},
-{"type":"b","contestid":"omc061","problemid":2247,"name":"OMC061(F)","point":400,"writer":"locker_kun","field":8,"category":["n_equation"],"keyword":[]}
+{"type":"b","contestid":"omc061","problemid":2247,"name":"OMC061(F)","point":400,"writer":"locker_kun","field":8,"category":["n_equation"],"keyword":[]},
+{"type":"n","contestid":"omc062","problemid":1725,"name":"OMC062(A)","point":200,"writer":"integral_1","field":9,"category":["num_seq","modulo"],"keyword":[]},
+{"type":"n","contestid":"omc062","problemid":2551,"name":"OMC062(B)","point":300,"writer":"Lewandowski","field":4,"category":["circle","polygon"],"keyword":[]},
+{"type":"n","contestid":"omc062","problemid":2616,"name":"OMC062(C)","point":300,"writer":"integral_1","field":2,"category":["count_up"],"keyword":[]},
+{"type":"n","contestid":"omc062","problemid":2033,"name":"OMC062(D)","point":400,"writer":"Lewandowski","field":4,"category":["polygon"],"keyword":[]},
+{"type":"n","contestid":"omc062","problemid":2509,"name":"OMC062(E)","point":400,"writer":"RIN_H3PO4","field":2,"category":["count_up"],"keyword":[]},
+{"type":"n","contestid":"omc062","problemid":2536,"name":"OMC062(F)","point":500,"writer":"idtwstaos","field":9,"category":["num_seq","p_adic_val"],"keyword":[]}
 ]
