@@ -392,5 +392,11 @@
 {"type":"n","contestid":"omc062","problemid":2616,"name":"OMC062(C)","point":300,"writer":"integral_1","field":2,"category":["count_up"],"keyword":[]},
 {"type":"n","contestid":"omc062","problemid":2033,"name":"OMC062(D)","point":400,"writer":"Lewandowski","field":4,"category":["polygon"],"keyword":[]},
 {"type":"n","contestid":"omc062","problemid":2509,"name":"OMC062(E)","point":400,"writer":"RIN_H3PO4","field":2,"category":["count_up"],"keyword":[]},
-{"type":"n","contestid":"omc062","problemid":2536,"name":"OMC062(F)","point":500,"writer":"idtwstaos","field":9,"category":["num_seq","p_adic_val"],"keyword":[]}
+{"type":"n","contestid":"omc062","problemid":2536,"name":"OMC062(F)","point":500,"writer":"idtwstaos","field":9,"category":["num_seq","p_adic_val"],"keyword":[]},
+{"type":"b","contestid":"omc063","problemid":1874,"name":"OMC063(A)","point":100,"writer":"aroom","field":1,"category":["equation"],"keyword":[]},
+{"type":"b","contestid":"omc063","problemid":2374,"name":"OMC063(B)","point":100,"writer":"sakachin_mt","field":8,"category":["n_equation"],"keyword":[]},
+{"type":"b","contestid":"omc063","problemid":1572,"name":"OMC063(C)","point":200,"writer":"mathlike","field":2,"category":["count_up"],"keyword":[]},
+{"type":"b","contestid":"omc063","problemid":1321,"name":"OMC063(D)","point":200,"writer":"mito_nya","field":4,"category":["circle"],"keyword":[]},
+{"type":"b","contestid":"omc063","problemid":290,"name":"OMC063(E)","point":300,"writer":"wani","field":2,"category":["count_up"],"keyword":[]},
+{"type":"b","contestid":"omc063","problemid":1759,"name":"OMC063(F)","point":400,"writer":"Stella_3","field":8,"category":["n_equation"],"keyword":[]}
 ]
