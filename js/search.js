@@ -1,4 +1,4 @@
-var plOptions = {
+const plOptions = {
   valueNames: ['pl-writer', 'pl-name', 'pl-point', 'pl-field', 'pl-category', 'pl-keyword'],
   page: 50,
   pagination: {
@@ -7,12 +7,15 @@ var plOptions = {
     outerWindow: 1,
   }
 };
-var probList;
-var param = {};
+let probList;
+let param = {};
 
-var categorydic = {};
+let categorydic = {};
 
-var typelist = {
+let rating = {};
+let admin = [];
+
+const typelist = {
   b: '4b',
   n: '無印',
   e: '4e',
@@ -20,12 +23,12 @@ var typelist = {
   o: '旧'
 }
 
-var local_storage = {};
+let local_storage = {};
 
 $(function () {
   window.setTimeout(loaded, 5000);
   // Get URL parameter
-  var param_changed = false;
+  let param_changed = false;
   function chkboxCheck(paramid, htmlid) {
     param[paramid] = getParam(paramid) == 'true';
     if (param[paramid]) {
@@ -45,7 +48,7 @@ $(function () {
   // Field
   param.field = getParam('field');
   if (param.field) {
-    var num = parseInt(param.field);
+    const num = parseInt(param.field);
     if ((num & 1) != 0) $('#f-field-a').prop('checked', true);
     if ((num & 2) != 0) $('#f-field-c').prop('checked', true);
     if ((num & 4) != 0) $('#f-field-g').prop('checked', true);
@@ -122,47 +125,46 @@ $(function () {
   $('#data-update-date').text(`(データ更新：${updateDateStr(local_storage.CALastUpdate)})`);
 
 
-  // Get category
-  $.getJSON("./data/category.json", function () { })
-    .done(function (data) {
-      for (var i in data) {
-        categorydic[data[i].id] = paramLink({ category: `'${data[i].id}'` }, data[i].display);
-        $('#f-category').append(`<option value="${data[i].id}">${data[i].display}</option>`);
-        if (data[i].id == param.category) {
-          $('#f-category').val(data[i].id);
+  // Get rating
+  $.when(
+    $.getJSON("./data/rating.json"),
+    $.getJSON("./data/admin.json"),
+    $.getJSON("./data/category.json"),
+    $.getJSON("./data/problem.json"))
+    .done(function (rdata, adata, cdata, pdata) {
+      rating = rdata[0];
+      admin = adata[0];
+      let category = cdata[0];
+      let problem = pdata[0];
+      for (let i in category) {
+        categorydic[category[i].id] = paramLink({ category: `'${category[i].id}'` }, category[i].display);
+        $('#f-category').append(`<option value="${category[i].id}">${category[i].display}</option>`);
+        if (category[i].id == param.category) {
+          $('#f-category').val(category[i].id);
         }
       }
-
-      // Get problem
-      $.getJSON("./data/problem.json", function () { })
-        .done(function (data) {
-          var count_match = 0;
-          var count_total = 0;
-          var column_list = [];
-          for (var i in data) {
-            count_total++;
-            if (filter(data[i])) {
-              column_list.push(problemColumn(data[i]));
-              count_match++;
-            }
-          }
-          $('#problem-data').append(column_list.join(''));
-          $('#search-result').text(`検索結果：${count_match}/${count_total}件`);
-          if (count_match) {
-            $('#problem-list').append('<ul class="pagination"></ul>');
-            probList = new List('problem-list', plOptions);
-            probList.sort('pl-name', { order: 'asc' });
-          }
-          if ($('#user-id').val() && isDataOld(local_storage.CALastLoad)) userLoad();
-          $('#user-load').on('click', userLoad);
-          loaded();
-        })
-        .fail(function () {
-          alert("Couldn't get the data of problems");
-        });
+      let count_match = 0, count_total = 0;
+      let column_list = [];
+      for (let i in problem) {
+        count_total++;
+        if (filter(problem[i])) {
+          column_list.push(problemColumn(problem[i]));
+          count_match++;
+        }
+      }
+      $('#problem-data').append(column_list.join(''));
+      $('#search-result').text(`検索結果：${count_match}/${count_total}件`);
+      if (count_match) {
+        $('#problem-list').append('<ul class="pagination"></ul>');
+        probList = new List('problem-list', plOptions);
+        probList.sort('pl-name', { order: 'asc' });
+      }
+      if ($('#user-id').val() && isDataOld(local_storage.CALastLoad)) userLoad();
+      $('#user-load').on('click', userLoad);
+      loaded();
     })
     .fail(function () {
-      alert("Couldn't get the data of categories");
+      alert("Couldn't get the data");
     });
 
   $('#f-apply').on('click', applyFilter);
@@ -176,7 +178,7 @@ function paramLink(p, d) {
 }
 
 function numToField(num) {
-  var field = [];
+  let field = [];
   if (num & 1) field.push(paramLink({ field: 1 }, 'A'));
   if (num & 2) field.push(paramLink({ field: 2 }, 'C'));
   if (num & 4) field.push(paramLink({ field: 4 }, 'G'));
@@ -185,20 +187,38 @@ function numToField(num) {
 }
 
 function problemColumn(data) {
-  var categories = [];
-  for (var i in data.category) {
+  let writer = '';
+  if (param.writer_show) {
+    let color = '#000000'
+    if (admin.includes(data.writer)) color = '#9400d3';
+    else if (data.writer in rating) {
+      switch (Math.floor(rating[data.writer] / 400)) {
+        case 0: color = '#808080'; break;
+        case 1: color = '#804000'; break;
+        case 2: color = '#008000'; break;
+        case 3: color = '#00c0c0'; break;
+        case 4: color = '#0000ff'; break;
+        case 5: color = '#c0c000'; break;
+        case 6: color = '#ff8000'; break;
+        default: color = '#ff0000'; break;
+      }
+    }
+    writer = `<td class="pl-writer"><a style="color:${color}; font-weight:bold;" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>`;
+  }
+  let categories = [];
+  for (let i in data.category) {
     categories.push(categorydic[data.category[i]]);
   }
-  var keywords = [];
-  for (var i in data.keyword) {
+  let keywords = [];
+  for (let i in data.keyword) {
     keywords.push(paramLink({ keyword: `'${data.keyword[i]}'` }, data.keyword[i]));
   }
-  var isCA = '';
+  let isCA = '';
   if (local_storage.CAstatus[data.problemid]) {
     isCA = ' ca=true';
   }
   return `<tr class="problem-column" id="prob-${data.problemid}"${isCA}>`
-    + (param.writer_show ? `<td class="pl-writer"><a href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>` : '')
+    + writer
     + `<td class="pl-name"><p hidden>${data.name}</p>`
     + `<a type="${data.type}" type-disp="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
     + `<td class="pl-point">${paramLink({ point_min: data.point, point_max: data.point }, data.point)}</td>`
@@ -237,10 +257,10 @@ function filter(data) {
 }
 
 function applyFilter(event, param_add = {}) {
-  var newparam = {};
+  let newparam = {};
   if ($('#f-name').val()) newparam['name'] = $('#f-name').val();
   if ($('#f-name-not').prop('checked')) newparam['name_not'] = true;
-  var num = 0;
+  let num = 0;
   if ($('#f-field-a').prop('checked')) num += 1;
   if ($('#f-field-c').prop('checked')) num += 2;
   if ($('#f-field-g').prop('checked')) num += 4;
@@ -279,7 +299,7 @@ function applyFilter(event, param_add = {}) {
 function getParam(name, url) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+  const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
     results = regex.exec(url);
   if (!results) return null;
   if (!results[2]) return '';
@@ -288,7 +308,7 @@ function getParam(name, url) {
 
 async function userLoad() {
   $('#loading-mark').show();
-  var user = $('#user-id').val();
+  const user = $('#user-id').val();
   const data = await getUserCA(user);
   $('#data-update-date').text(`(データ更新：${updateDateStr(data.lastupdate)})`);
   if (data.ca.length) {
@@ -298,7 +318,7 @@ async function userLoad() {
     local_storage.CAstatus = {};
     data.ca.forEach(id => {
       local_storage.CAstatus[id] = true;
-      var col = probList.items.find(c => c.elm.id == `prob-${id}`);
+      let col = probList.items.find(c => c.elm.id == `prob-${id}`);
       if (col) {
         $(col.elm).attr('ca', true);
         $(col.elm).find('.pl-hasinfo').attr('show', true);
