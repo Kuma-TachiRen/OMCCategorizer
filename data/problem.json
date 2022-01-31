@@ -404,5 +404,11 @@
 {"type":"e","contestid":"omc064","problemid":2174,"name":"OMC064(C)","point":500,"writer":"natu_math","field":8,"category":["n_equation"],"keyword":[]},
 {"type":"e","contestid":"omc064","problemid":1904,"name":"OMC064(D)","point":500,"writer":"kinmokusei","field":2,"category":["count_up"],"keyword":[]},
 {"type":"e","contestid":"omc064","problemid":266,"name":"OMC064(E)","point":700,"writer":"sakurabarora777","field":4,"category":["polygon"],"keyword":[]},
-{"type":"e","contestid":"omc064","problemid":2717,"name":"OMC064(F)","point":700,"writer":"2_3_5_7","field":2,"category":["count_up"],"keyword":[]}
+{"type":"e","contestid":"omc064","problemid":2717,"name":"OMC064(F)","point":700,"writer":"2_3_5_7","field":2,"category":["count_up"],"keyword":[]},
+{"type":"b","contestid":"omc065","problemid":1834,"name":"OMC065(A)","point":100,"writer":"nmoon","field":2,"category":["count_up"],"keyword":[]},
+{"type":"b","contestid":"omc065","problemid":1505,"name":"OMC065(B)","point":200,"writer":"nmoon","field":8,"category":["count_up"],"keyword":[]},
+{"type":"b","contestid":"omc065","problemid":1977,"name":"OMC065(C)","point":200,"writer":"nmoon","field":1,"category":["equation"],"keyword":[]},
+{"type":"b","contestid":"omc065","problemid":2223,"name":"OMC065(D)","point":200,"writer":"nmoon","field":8,"category":["n_equation"],"keyword":[]},
+{"type":"b","contestid":"omc065","problemid":2161,"name":"OMC065(E)","point":300,"writer":"nmoon","field":2,"category":["count_up"],"keyword":[]},
+{"type":"b","contestid":"omc065","problemid":1916,"name":"OMC065(F)","point":400,"writer":"nmoon","field":4,"category":["polygon"],"keyword":[]}
 ]
