@@ -15,13 +15,8 @@ let categorydic = {};
 let rating = {};
 let admin = [];
 
-const typelist = {
-  b: '4b',
-  n: '無印',
-  e: '4e',
-  v: '有志',
-  o: '旧'
-}
+const typeList = { b: '4b', n: '無印', e: '4e', v: '有志', o: '旧' };
+const rateColor = ['#808080', '#804000', '#008000', '#00c0c0', '#0000ff', '#c0c000', '#ff8000', '#ff0000']
 
 let local_storage = {};
 
@@ -41,9 +36,8 @@ $(function () {
   if (param.name) {
     $('#f-name').val(param.name);
     param_changed = true;
-  } else {
-    param.name = '';
   }
+  else param.name = '';
   chkboxCheck('name_not', 'f-name-not');
   // Field
   param.field = getParam('field');
@@ -54,23 +48,21 @@ $(function () {
     if ((num & 4) != 0) $('#f-field-g').prop('checked', true);
     if ((num & 8) != 0) $('#f-field-n').prop('checked', true);
     param_changed = true;
-  } else {
-    param.field = 0;
   }
+  else param.field = 0;
+
   chkboxCheck('field_exact', 'f-field-exact')
   // Point
   param.point_min = parseInt(getParam('point_min'));
   if (Number.isInteger(param.point_min)) {
     $('#f-point-min').val(param.point_min);
-  } else {
-    param.point_min = 0;
   }
+  else param.point_min = 0;
   param.point_max = parseInt(getParam('point_max'));
   if (Number.isInteger(param.point_max)) {
     $('#f-point-max').val(param.point_max);
-  } else {
-    param.point_max = 1000;
   }
+  else param.point_max = 1000;
   if (!(param.point_min == 0 && param.point_max == 1000)) param_changed = true;
   // Category/Keyword
   param.category = getParam('category');
@@ -79,16 +71,15 @@ $(function () {
   if (param.keyword) {
     $('#f-keyword').val(param.keyword);
     param_changed = true;
-  } else {
-    param.keyword = '';
   }
+  else param.keyword = '';
   // CA
   chkboxCheck('ca', 'f-ca');
   chkboxCheck('ca_not', 'f-ca-not');
   // Contest type
   param.type = {};
   param.type_any = false;
-  for (let key in typelist) {
+  for (let key in typeList) {
     param.type[key] = getParam('type_' + key) == 'true';
     if (param.type[key]) {
       $('#f-type-' + key).prop('checked', true);
@@ -102,9 +93,8 @@ $(function () {
   if (param.writer) {
     $('#f-writer').val(param.writer);
     param_changed = true;
-  } else {
-    param.writer = '';
   }
+  else param.writer = '';
 
   if (param_changed) $('#setting').attr('open', true);
 
@@ -192,35 +182,19 @@ function problemColumn(data) {
     let color = '#000000'
     if (admin.includes(data.writer)) color = '#9400d3';
     else if (data.writer in rating) {
-      switch (Math.floor(rating[data.writer] / 400)) {
-        case 0: color = '#808080'; break;
-        case 1: color = '#804000'; break;
-        case 2: color = '#008000'; break;
-        case 3: color = '#00c0c0'; break;
-        case 4: color = '#0000ff'; break;
-        case 5: color = '#c0c000'; break;
-        case 6: color = '#ff8000'; break;
-        default: color = '#ff0000'; break;
-      }
+      if (rating[data.writer] / 400 >= rateColor.length) color = rateColor[-1];
+      else color = rateColor[Math.floor(rating[data.writer] / 400)];
     }
     writer = `<td class="pl-writer"><a style="color:${color}; font-weight:bold;" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>`;
   }
-  let categories = [];
-  for (let i in data.category) {
-    categories.push(categorydic[data.category[i]]);
-  }
-  let keywords = [];
-  for (let i in data.keyword) {
-    keywords.push(paramLink({ keyword: `'${data.keyword[i]}'` }, data.keyword[i]));
-  }
+  let categories = data.category.map(x => categorydic[x]);
+  let keywords = data.keyword.map(x => paramLink({ keyword: `'${x}'` }, x));
   let isCA = '';
-  if (local_storage.CAstatus[data.problemid]) {
-    isCA = ' ca=true';
-  }
+  if (local_storage.CAstatus[data.problemid]) isCA = ' ca=true';
   return `<tr class="problem-column" id="prob-${data.problemid}"${isCA}>`
     + writer
     + `<td class="pl-name"><p hidden>${data.name}</p>`
-    + `<a type="${data.type}" type-disp="${typelist[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
+    + `<a type="${data.type}" type-disp="${typeList[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
     + `<td class="pl-point">${paramLink({ point_min: data.point, point_max: data.point }, data.point)}</td>`
     + `<td class="pl-field"><span class="pl-hasinfo">${numToField(data.field)}</span></td>`
     + `<td class="pl-category"><span class="pl-hasinfo">${categories.join(' / ')}</span></td>`
@@ -276,7 +250,7 @@ function applyFilter(event, param_add = {}) {
   if ($('#f-ca').prop('checked')) newparam['ca'] = true;
   if ($('#f-ca-not').prop('checked')) newparam['ca_not'] = true;
   if ($('#f-ca-show').prop('checked')) newparam['ca_show'] = true;
-  for (let key in typelist) {
+  for (let key in typeList) {
     if ($(`#f-type-${key}`).prop('checked')) newparam[`type_${key}`] = true;
   };
   if ($('#f-writer-show').prop('checked')) newparam['writer_show'] = true;
