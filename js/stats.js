@@ -1,8 +1,8 @@
-var local_storage = {};
+let local_storage = {};
 
 const aryMax = function (a, b) { return Math.max(a, b); }
 
-var user = '';
+let user = '';
 
 const point_step = 100;
 const point_min = 100;
@@ -15,10 +15,10 @@ const count_step = 10;
 const num_color_main = ['#ffffff', '#ffffff', '#ffffff', '#008888', '#ffffff', '#888800', '#ffffff', '#ffffff'];
 const num_color_sub = ['#888888', '#aa6644', '#44cc44', '#22bbbb', '#4444ff', '#bbbb22', '#ff8844', '#ff4444'];
 
-var total_count = 0;
-var total_point_sum = 0;
-var total_count_by_point = Array(point_len).fill(0);
-var chart_by_point;
+let total_count = 0;
+let total_point_sum = 0;
+let total_count_by_point = Array(point_len).fill(0);
+let chart_by_point;
 
 $(function () {
   window.setTimeout(loaded, 5000);
@@ -31,15 +31,15 @@ $(function () {
   $.getJSON("./data/problem.json", function () { })
     .done(function (data) {
 
-      var point_label = [];
-      for (var i = point_min; i <= point_max; i += point_step) {
+      let point_label = [];
+      for (let i = point_min; i <= point_max; i += point_step) {
         if (i == point_min) point_label.push(`~${i}`);
         else if (i == point_max) point_label.push(`${i}~`);
         else point_label.push(`${i}`);
       }
 
-      for (var i in data) {
-        var point = Math.floor((Math.min(Math.max(data[i].point, point_min), point_max) - point_min) / point_step);
+      for (let i in data) {
+        let point = Math.floor((Math.min(Math.max(data[i].point, point_min), point_max) - point_min) / point_step);
         total_count_by_point[point]++;
         total_count++;
         total_point_sum += data[i].point;
@@ -100,17 +100,17 @@ $(function () {
         },
         plugins: [{
           beforeDraw: function (c) {
-            var ctx = c.ctx;
+            let ctx = c.ctx;
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, c.width, c.height);
           },
           afterDraw: function (c) {
-            var ctx = c.ctx;
+            let ctx = c.ctx;
             ctx.font = 'bold 14px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';;
             c.data.datasets.forEach(function (d, s) {
-              var meta = c.getDatasetMeta(s);
+              let meta = c.getDatasetMeta(s);
               if (!meta.hidden) {
                 meta.data.forEach(function (e, i) {
                   if (d.data[i] == 0) return;
@@ -150,29 +150,8 @@ async function localLoad() {
   }
   $('#data-update-date').text(`(データ更新：${updateDateStr(local_storage.CALastUpdate)})`);
   $.getJSON("./data/problem.json", function () { })
-    .done(function (prob_data) {
-      var ca_count = 0;
-      var ca_point_sum = 0;
-      var ca_count_by_point = Array(point_len).fill(0);
-
-      prob_data.forEach(d => {
-        var point = Math.floor((Math.min(Math.max(d.point, point_min), point_max) - point_min) / point_step);
-        if (local_storage.CAstatus[d.problemid]) {
-          ca_count_by_point[point]++;
-          ca_count++;
-          ca_point_sum += d.point;
-        }
-      });
-      var non_ca_count_by_point = Array(point_len).fill(0);
-      for (var i = 0; i < point_len; i++) non_ca_count_by_point[i] = total_count_by_point[i] - ca_count_by_point[i];
-
-      chart_by_point.data.datasets[0].data = ca_count_by_point;
-      chart_by_point.data.datasets[1].data = non_ca_count_by_point;
-      chart_by_point.update();
-      $('#ca-count').children('.value').text(ca_count);
-      $('#ca-count').children('.value').attr('max', total_count);
-      $('#ca-point-sum').children('.value').text(ca_point_sum);
-      $('#ca-point-sum').children('.value').attr('max', total_point_sum);
+    .done(function (pdata) {
+      updateChartByPoint(pdata, x => local_storage.CAstatus[x]);
     });
   $('#loading-mark').hide();
 }
@@ -183,31 +162,35 @@ async function userLoad() {
   const data = await getUserCA(user);
   $('#data-update-date').text(`(データ更新：${updateDateStr(data.lastupdate)})`);
   $.getJSON("./data/problem.json", function () { })
-    .done(function (prob_data) {
-      var ca_count = 0;
-      var ca_point_sum = 0;
-      var ca_count_by_point = Array(point_len).fill(0);
-
-      prob_data.forEach(d => {
-        var point = Math.floor((Math.min(Math.max(d.point, point_min), point_max) - point_min) / point_step);
-        if (data.ca.includes(d.problemid)) {
-          ca_count_by_point[point]++;
-          ca_count++;
-          ca_point_sum += d.point;
-        }
-      });
-      var non_ca_count_by_point = Array(point_len).fill(0);
-      for (var i = 0; i < point_len; i++) non_ca_count_by_point[i] = total_count_by_point[i] - ca_count_by_point[i];
-
-      chart_by_point.data.datasets[0].data = ca_count_by_point;
-      chart_by_point.data.datasets[1].data = non_ca_count_by_point;
-      chart_by_point.update();
-      $('#ca-count').children('.value').text(ca_count);
-      $('#ca-count').children('.value').attr('max', total_count);
-      $('#ca-point-sum').children('.value').text(ca_point_sum);
-      $('#ca-point-sum').children('.value').attr('max', total_point_sum);
+    .done(function (pdata) {
+      updateChartByPoint(pdata, x => data.ca.includes(x));
     });
   $('#loading-mark').hide();
+}
+
+function updateChartByPoint(pdata, fn) {
+  let ca_count = 0;
+  let ca_point_sum = 0;
+  let ca_count_by_point = Array(point_len).fill(0);
+
+  pdata.forEach(d => {
+    let point = Math.floor((Math.min(Math.max(d.point, point_min), point_max) - point_min) / point_step);
+    if (fn(d.problemid)) {
+      ca_count_by_point[point]++;
+      ca_count++;
+      ca_point_sum += d.point;
+    }
+  });
+  let non_ca_count_by_point = Array(point_len).fill(0);
+  for (let i = 0; i < point_len; i++) non_ca_count_by_point[i] = total_count_by_point[i] - ca_count_by_point[i];
+
+  chart_by_point.data.datasets[0].data = ca_count_by_point;
+  chart_by_point.data.datasets[1].data = non_ca_count_by_point;
+  chart_by_point.update();
+  $('#ca-count').children('.value').text(ca_count);
+  $('#ca-count').children('.value').attr('max', total_count);
+  $('#ca-point-sum').children('.value').text(ca_point_sum);
+  $('#ca-point-sum').children('.value').attr('max', total_point_sum);
 }
 
 function downloadImage() {
@@ -232,16 +215,16 @@ function downloadImage() {
   ctx.fillText('OMC Categorizer', 780, 40);
 
   ctx.fillStyle = '#000000';
-  var y = 100;
-  var x = 100;
+  let y = 100;
+  let x = 100;
   $('.stats-data').each(function () {
-    var name = $(this).children('.name').text();
-    var val = parseInt($(this).children('.value').text());
-    var val_max = parseInt($(this).children('.value').attr('max'));
+    let name = $(this).children('.name').text();
+    let val = parseInt($(this).children('.value').text());
+    let val_max = parseInt($(this).children('.value').attr('max'));
 
     ctx.font = 'bold 20px sans-serif';
     ctx.textAlign = 'center';
-    var name_width = ctx.measureText(name).width;
+    let name_width = ctx.measureText(name).width;
     ctx.fillStyle = '#bbffbb';
     ctx.fillRect(x - name_width / 2, y, name_width, 5);
     ctx.fillStyle = '#000000';
@@ -252,7 +235,7 @@ function downloadImage() {
     ctx.fillStyle = '#000000';
     if (val_max < 1e4) {
       ctx.font = '24px sans-serif';
-      var val_width = ctx.measureText(val).width;
+      let val_width = ctx.measureText(val).width;
       ctx.fillText(val, x + 80, y + 10);
       ctx.font = '14px sans-serif';
       ctx.fillText('/' + val_max, x + 80 + val_width, y + 10);
@@ -286,7 +269,6 @@ function downloadImage() {
     ctx.fillStyle = '#000000';
     if (val == val_max) ctx.fillText('100%', x, y + 9);
     else ctx.fillText(('0' + (100 * val / val_max).toFixed(1)).slice(-4) + '%', x, y + 9);
-
     y += 100;
   });
 

@@ -1,4 +1,4 @@
-const plOptions = {
+const LIST_OPTIONS = {
   valueNames: ['pl-writer', 'pl-name', 'pl-point', 'pl-field', 'pl-category', 'pl-keyword'],
   page: 50,
   pagination: {
@@ -7,103 +7,74 @@ const plOptions = {
     outerWindow: 1,
   }
 };
+const TYPE_LIST = { b: '4b', n: '無印', e: '4e', v: '有志', o: '旧' };
+const RATE_COLOR = ['#808080', '#804000', '#008000', '#00c0c0', '#0000ff', '#c0c000', '#ff8000', '#ff0000']
+
 let probList;
-let param = {};
+let param = {}
 
 let categorydic = {};
 
 let rating = {};
 let admin = [];
 
-const typeList = { b: '4b', n: '無印', e: '4e', v: '有志', o: '旧' };
-const rateColor = ['#808080', '#804000', '#008000', '#00c0c0', '#0000ff', '#c0c000', '#ff8000', '#ff0000']
-
 let local_storage = {};
 
 $(function () {
   window.setTimeout(loaded, 5000);
-  // Get URL parameter
-  let param_changed = false;
+
   function chkboxCheck(paramid, htmlid) {
-    param[paramid] = getParam(paramid) == 'true';
-    if (param[paramid]) {
-      $('#' + htmlid).prop('checked', true);
-      param_changed = true;
-    }
+    param[paramid] = raw_param.get(paramid) == 'true';
+    if (param[paramid]) $('#' + htmlid).prop('checked', true);
   }
+  // Get URL parameter
+  const raw_param = (new URL(document.location)).searchParams;
+  // Open settings list
+  if (raw_param.keys().length > 0) $('#setting').attr('open', true);
   // Problem name
-  param.name = getParam('name');
-  if (param.name) {
-    $('#f-name').val(param.name);
-    param_changed = true;
-  }
+  param.name = raw_param.get('name');
+  if (param.name) $('#f-name').val(param.name);
   else param.name = '';
   chkboxCheck('name_not', 'f-name-not');
   // Field
-  param.field = getParam('field');
-  if (param.field) {
-    const num = parseInt(param.field);
-    if ((num & 1) != 0) $('#f-field-a').prop('checked', true);
-    if ((num & 2) != 0) $('#f-field-c').prop('checked', true);
-    if ((num & 4) != 0) $('#f-field-g').prop('checked', true);
-    if ((num & 8) != 0) $('#f-field-n').prop('checked', true);
-    param_changed = true;
+  param.field = parseInt(raw_param.get('field'));
+  if (Number.isInteger(param.field)) {
+    if ((field & 1) != 0) $('#f-field-a').prop('checked', true);
+    if ((field & 2) != 0) $('#f-field-c').prop('checked', true);
+    if ((field & 4) != 0) $('#f-field-g').prop('checked', true);
+    if ((field & 8) != 0) $('#f-field-n').prop('checked', true);
   }
   else param.field = 0;
-
   chkboxCheck('field_exact', 'f-field-exact')
   // Point
-  param.point_min = parseInt(getParam('point_min'));
-  if (Number.isInteger(param.point_min)) {
-    $('#f-point-min').val(param.point_min);
-  }
+  param.point_min = parseInt(raw_param.get('point_min'));
+  if (Number.isInteger(param.point_min)) $('#f-point-min').val(param.point_min);
   else param.point_min = 0;
-  param.point_max = parseInt(getParam('point_max'));
-  if (Number.isInteger(param.point_max)) {
-    $('#f-point-max').val(param.point_max);
-  }
+  param.point_max = parseInt(raw_param.get('point_max'));
+  if (Number.isInteger(param.point_max)) $('#f-point-max').val(param.point_max);
   else param.point_max = 1000;
-  if (!(param.point_min == 0 && param.point_max == 1000)) param_changed = true;
-  // Category/Keyword
-  param.category = getParam('category');
-  if (param.category) param_changed = true;
-  param.keyword = getParam('keyword');
-  if (param.keyword) {
-    $('#f-keyword').val(param.keyword);
-    param_changed = true;
-  }
+  // Category
+  param.category = raw_param.get('category');
+  if (!param.category) param.category = '';
+  // Keyword
+  param.keyword = raw_param.get('keyword');
+  if (param.keyword) $('#f-keyword').val(param.keyword);
   else param.keyword = '';
   // CA
   chkboxCheck('ca', 'f-ca');
   chkboxCheck('ca_not', 'f-ca-not');
   // Contest type
-  param.type = {};
   param.type_any = false;
-  for (let key in typeList) {
-    param.type[key] = getParam('type_' + key) == 'true';
-    if (param.type[key]) {
-      $('#f-type-' + key).prop('checked', true);
-      param_changed = true;
-      param.type_any = true;
-    }
-  };
+  for (let key in TYPE_LIST) {
+    chkboxCheck('type_' + key, '#f-type-' + key);
+    if (param['type_' + key]) param.type_any = true;
+  }
   // Writer
   chkboxCheck('writer_show', 'f-writer-show');
-  param.writer = getParam('writer');
-  if (param.writer) {
-    $('#f-writer').val(param.writer);
-    param_changed = true;
-  }
+  if (param.writer_show) $('#pl-name-head').before('<th class="sort" data-sort="pl-writer" width="100px">writer</th>');
+  param.writer = raw_param.get('writer');
+  if (param.writer) $('#f-writer').val(param.writer);
   else param.writer = '';
-
-  if (param_changed) $('#setting').attr('open', true);
-
-  if (getParam('writer_show') == 'true') {
-    param.writer_show = true;
-    $('#pl-name-head').before('<th class="sort" data-sort="pl-writer" width="100px">writer</th>');
-    param.writer = getParam('writer');
-    if (!param.writer) param.writer = '';
-  }
 
   // Get local storage
   local_storage = getStorage();
@@ -115,7 +86,7 @@ $(function () {
   $('#data-update-date').text(`(データ更新：${updateDateStr(local_storage.CALastUpdate)})`);
 
 
-  // Get rating
+  // Get data
   $.when(
     $.getJSON("./data/rating.json"),
     $.getJSON("./data/admin.json"),
@@ -129,9 +100,7 @@ $(function () {
       for (let i in category) {
         categorydic[category[i].id] = paramLink({ category: `'${category[i].id}'` }, category[i].display);
         $('#f-category').append(`<option value="${category[i].id}">${category[i].display}</option>`);
-        if (category[i].id == param.category) {
-          $('#f-category').val(category[i].id);
-        }
+        if (category[i].id == param.category) $('#f-category').val(category[i].id);
       }
       let count_match = 0, count_total = 0;
       let column_list = [];
@@ -146,7 +115,7 @@ $(function () {
       $('#search-result').text(`検索結果：${count_match}/${count_total}件`);
       if (count_match) {
         $('#problem-list').append('<ul class="pagination"></ul>');
-        probList = new List('problem-list', plOptions);
+        probList = new List('problem-list', LIST_OPTIONS);
         probList.sort('pl-name', { order: 'asc' });
       }
       if ($('#user-id').val() && isDataOld(local_storage.CALastLoad)) userLoad();
@@ -182,8 +151,8 @@ function problemColumn(data) {
     let color = '#000000'
     if (admin.includes(data.writer)) color = '#9400d3';
     else if (data.writer in rating) {
-      if (rating[data.writer] / 400 >= rateColor.length) color = rateColor[-1];
-      else color = rateColor[Math.floor(rating[data.writer] / 400)];
+      if (rating[data.writer] / 400 >= RATE_COLOR.length) color = RATE_COLOR[-1];
+      else color = RATE_COLOR[Math.floor(rating[data.writer] / 400)];
     }
     writer = `<td class="pl-writer"><a style="color:${color}; font-weight:bold;" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>`;
   }
@@ -194,7 +163,7 @@ function problemColumn(data) {
   return `<tr class="problem-column" id="prob-${data.problemid}"${isCA}>`
     + writer
     + `<td class="pl-name"><p hidden>${data.name}</p>`
-    + `<a type="${data.type}" type-disp="${typeList[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
+    + `<a type="${data.type}" type-disp="${TYPE_LIST[data.type]}" href="https://onlinemathcontest.com/contests/${data.contestid}/tasks/${data.problemid}" target="_blank" rel="noopener noreferrer">${data.name}</a></td>`
     + `<td class="pl-point">${paramLink({ point_min: data.point, point_max: data.point }, data.point)}</td>`
     + `<td class="pl-field"><span class="pl-hasinfo">${numToField(data.field)}</span></td>`
     + `<td class="pl-category"><span class="pl-hasinfo">${categories.join(' / ')}</span></td>`
@@ -208,10 +177,12 @@ function filter(data) {
     data.category = [];
     data.keyword = [];
   }
-  if (!param.name_not) {
-    if (param.name && (data.name.indexOf(param.name) == -1)) return false;
-  } else {
-    if (param.name && (data.name.indexOf(param.name) != -1)) return false;
+  if (param.name) {
+    if (!param.name_not) {
+      if (data.name.indexOf(param.name) == -1) return false;
+    } else {
+      if (data.name.indexOf(param.name) != -1) return false;
+    }
   }
   if (param.field) {
     if (param.field_exact) {
@@ -250,7 +221,7 @@ function applyFilter(event, param_add = {}) {
   if ($('#f-ca').prop('checked')) newparam['ca'] = true;
   if ($('#f-ca-not').prop('checked')) newparam['ca_not'] = true;
   if ($('#f-ca-show').prop('checked')) newparam['ca_show'] = true;
-  for (let key in typeList) {
+  for (let key in TYPE_LIST) {
     if ($(`#f-type-${key}`).prop('checked')) newparam[`type_${key}`] = true;
   };
   if ($('#f-writer-show').prop('checked')) newparam['writer_show'] = true;
@@ -260,7 +231,7 @@ function applyFilter(event, param_add = {}) {
   local_storage.ShowNonCAInfo = $('#f-non-ca-info').prop('checked');
   saveStorage(local_storage);
 
-  // page move
+  // Page move
   if (newparam.length == 0) window.location.href = 'search';
   else window.location.href = 'search?'
     + Object.entries(newparam).map((e) => {
@@ -268,16 +239,6 @@ function applyFilter(event, param_add = {}) {
       let value = encodeURI(e[1]);
       return `${key}=${value}`;
     }).join('&');
-}
-
-function getParam(name, url) {
-  if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, "\\$&");
-  const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 async function userLoad() {
