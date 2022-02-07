@@ -39,10 +39,10 @@ $(function () {
   // Field
   param.field = parseInt(raw_param.get('field'));
   if (Number.isInteger(param.field)) {
-    if ((field & 1) != 0) $('#f-field-a').prop('checked', true);
-    if ((field & 2) != 0) $('#f-field-c').prop('checked', true);
-    if ((field & 4) != 0) $('#f-field-g').prop('checked', true);
-    if ((field & 8) != 0) $('#f-field-n').prop('checked', true);
+    if ((param.field & 1) != 0) $('#f-field-a').prop('checked', true);
+    if ((param.field & 2) != 0) $('#f-field-c').prop('checked', true);
+    if ((param.field & 4) != 0) $('#f-field-g').prop('checked', true);
+    if ((param.field & 8) != 0) $('#f-field-n').prop('checked', true);
   }
   else param.field = 0;
   chkboxCheck('field_exact', 'f-field-exact')
@@ -66,7 +66,7 @@ $(function () {
   // Contest type
   param.type_any = false;
   for (let key in TYPE_LIST) {
-    chkboxCheck('type_' + key, '#f-type-' + key);
+    chkboxCheck('type_' + key, 'f-type-' + key);
     if (param['type_' + key]) param.type_any = true;
   }
   // Writer
@@ -196,7 +196,7 @@ function filter(data) {
   if (param.keyword && !data.keyword.includes(param.keyword)) return false;
   if (param.ca && !param.ca_not && !local_storage.CAstatus[data.problemid]) return false;
   if (!param.ca && param.ca_not && local_storage.CAstatus[data.problemid]) return false;
-  if (param.type_any && !param.type[data.type]) return false;
+  if (param.type_any && !param['type_' + data.type]) return false;
   if (param.writer_show && data.writer.indexOf(param.writer) == -1) return false;
   return true;
 }
