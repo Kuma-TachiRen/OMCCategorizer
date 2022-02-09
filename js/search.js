@@ -15,9 +15,6 @@ let param = {}
 
 let categorydic = {};
 
-let rating = {};
-let admin = [];
-
 let local_storage = {};
 
 $(function () {
@@ -88,13 +85,9 @@ $(function () {
 
   // Get data
   $.when(
-    $.getJSON("./data/rating.json"),
-    $.getJSON("./data/admin.json"),
     $.getJSON("./data/category.json"),
     $.getJSON("./data/problem.json"))
-    .done(function (rdata, adata, cdata, pdata) {
-      rating = rdata[0];
-      admin = adata[0];
+    .done(function (cdata, pdata) {
       let category = cdata[0];
       let problem = pdata[0];
       for (let i in category) {
@@ -147,15 +140,7 @@ function numToField(num) {
 
 function problemColumn(data) {
   let writer = '';
-  if (param.writer_show) {
-    let color = '#000000'
-    if (admin.includes(data.writer)) color = '#9400d3';
-    else if (data.writer in rating) {
-      if (rating[data.writer] / 400 >= RATE_COLOR.length) color = RATE_COLOR[-1];
-      else color = RATE_COLOR[Math.floor(rating[data.writer] / 400)];
-    }
-    writer = `<td class="pl-writer"><a style="color:${color}; font-weight:bold;" href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>`;
-  }
+  if (param.writer_show) writer = `<td class="pl-writer"><a href="https://onlinemathcontest.com/users/${data.writer}" target="_blank" rel="noopener noreferrer">${data.writer}</a></td>`;
   let categories = data.category.map(x => categorydic[x]);
   let keywords = data.keyword.map(x => paramLink({ keyword: `'${x}'` }, x));
   let isCA = '';
